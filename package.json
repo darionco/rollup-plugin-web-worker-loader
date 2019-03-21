@@ -1,7 +1,7 @@
 {
   "name": "rollup-plugin-web-worker-loader",
   "version": "0.1.0",
-  "description": "Bundle",
+  "description": "Rollup plugin to bundle web worker code to later be instantiated as a Worker",
   "main": "src/index.js",
   "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
   "author": "Dario Segura",
