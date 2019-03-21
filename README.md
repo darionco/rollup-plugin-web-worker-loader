@@ -29,7 +29,7 @@ export default {
 Bundle the worker code using the prefix `web-worker:` in your imports:
 
 ```javascript
-import DataWorker from 'web-worker!./DataWorker';
+import DataWorker from 'web-worker:./DataWorker';
 
 const dataWorker = new DataWorker();
 dataWorker.postMessage('Hello World!');
