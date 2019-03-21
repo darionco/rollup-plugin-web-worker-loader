@@ -1,0 +1,8 @@
+node_modules
+.idea
+dist
+
+www/keys/*
+keys/*.p8
+server/*.pem
+server/*.crt

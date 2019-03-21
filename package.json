@@ -1,0 +1,21 @@
+{
+  "name": "rollup-plugin-webworker-loader",
+  "version": "0.1.0",
+  "description": "Bundle",
+  "main": "src/index.js",
+  "repository": "https://github.com/darionco/rollup-plugin-webworker-loader",
+  "author": "Dario Segura",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "rollup",
+    "rollup-plugin",
+    "webworker",
+    "worker"
+  ],
+  "devDependencies": {
+    "eslint": "^5.15.3"
+  }
+}
