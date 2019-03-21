@@ -1,14 +1,15 @@
 # rollup-plugin-web-worker-loader
 
-Rollup plugin to bundle web worker code with the main output and later be
-instantiated as a Blob.  
-Preserves the code so other plugins can modify it and/or transpile it. Can be
+Rollup plugin to bundle web worker code to later be instantiated as a Worker.  
+
+Preserves the code so other plugins can modify it and/or transpile it.  
+Can be
 configured to inline a sourcemap. 
 
 ### Getting started
 
 ```
-npm install rollup-plugin-web-worker-loader
+yarn add rollup-plugin-web-worker-loader --dev
 ```
 
 Add the plugin to your rollup configuration:
@@ -21,7 +22,7 @@ export default {
     plugins: [ 
         webWorkerLoader(),
     ],
-    format: 'esm'
+    format: 'esm',
 };
 ```
 
@@ -35,10 +36,10 @@ dataWorker.postMessage('Hello World!');
 ```
 
 ### Configuration
-The plugin responds to the followinf configuration options:
+The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
-    sourcemap: boolean,     // should a source map be included
+    sourcemap: boolean,     // should a source map be included in the final output
 })
 ```
 
