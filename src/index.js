@@ -31,9 +31,9 @@ module.exports = function workerLoaderPlugin(config = null) {
         },
 
         resolveId: (importee, importer) => {
-            if (importee === 'rollup-plugin-webworker-loader-helper') {
+            if (importee === 'rollup-plugin-web-worker-loader-helper') {
                 return path.resolve(__dirname, 'createWorkerFactory.js');
-            } else if (importee.indexOf('webworker:') === 0) {
+            } else if (importee.indexOf('web-worker:') === 0) {
                 const name = importee.split(':')[1];
                 const folder = path.dirname(importer);
                 const paths = require.resolve.paths(importer);

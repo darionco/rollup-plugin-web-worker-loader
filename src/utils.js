@@ -22,13 +22,13 @@ function extractSource(code, exports) {
         source = code;
     }
 
-    return `/* rollup-plugin-webworker-loader */function () {\n${source}}\n`;
+    return `/* rollup-plugin-web-worker-loader */function () {\n${source}}\n`;
 }
 
 function buildWorkerCode(code, sourcemap = null) {
     return `\
 /* eslint-disable */\n\
-import {createWorkerFactory} from 'rollup-plugin-webworker-loader-helper';\n\
+import {createWorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
 const WorkerFactory = createWorkerFactory(${code.substring(0, code.length - 1)}, ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;

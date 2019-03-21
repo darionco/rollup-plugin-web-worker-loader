@@ -1,9 +1,9 @@
 {
-  "name": "rollup-plugin-webworker-loader",
+  "name": "rollup-plugin-web-worker-loader",
   "version": "0.1.0",
   "description": "Bundle",
   "main": "src/index.js",
-  "repository": "https://github.com/darionco/rollup-plugin-webworker-loader",
+  "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
   "author": "Dario Segura",
   "license": "MIT",
   "scripts": {
@@ -13,6 +13,7 @@
     "rollup",
     "rollup-plugin",
     "webworker",
+    "web-worker",
     "worker"
   ],
   "devDependencies": {
