@@ -10,6 +10,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     const sourcemap = (config && config.sourcemap) || false;
 
     const idMap = new Map();
+    const exclude = new Map();
     let projectOptions = null;
 
     return {
@@ -41,19 +42,20 @@ module.exports = function workerLoaderPlugin(config = null) {
 
                 const target = require.resolve(name, { paths });
                 if (target && !idMap.has(importee)) {
-                    idMap.set(importee, Object.assign({}, projectOptions, {
+                    idMap.set(target, Object.assign({}, projectOptions, {
                         input: target,
                     }));
 
-                    return importee;
+                    return target;
                 }
             }
             return null;
         },
 
         load: id => new Promise((resolve, reject) => {
-            if (idMap.has(id)) {
+            if (idMap.has(id) && !exclude.has(id)) {
                 const inputOptions = idMap.get(id);
+                exclude.set(id, true);
                 rollup.rollup(inputOptions).then(bundle => {
                     bundle.generate({ format: 'es', name: id, sourcemap: true }).then( result => {
                         const output = result.output;
@@ -64,6 +66,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 break;
                             }
                         }
+                        exclude.delete(id);
                         if (chunk !== null) {
                             let source = utils.extractSource(chunk.code, chunk.exports);
                             resolve({ code: utils.buildWorkerCode(source, sourcemap ? chunk.map : null) });
