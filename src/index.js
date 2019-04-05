@@ -12,20 +12,24 @@ module.exports = function workerLoaderPlugin(config = null) {
     const idMap = new Map();
     const exclude = new Map();
     let projectOptions = null;
+    let basePath = null;
 
     return {
         name: 'worker-loader',
 
         options: options => {
-            projectOptions = Object.assign({}, options);
-            if (options.plugins && options.plugins.length) {
-                const plugins = [];
-                options.plugins.forEach(plugin => {
-                    if (bannedPluginNames.indexOf(plugin.name) === -1) {
-                        plugins.push(plugin);
-                    }
-                });
-                projectOptions.plugins = plugins;
+            if (!projectOptions) {
+                projectOptions = Object.assign({}, options);
+                if (options.plugins && options.plugins.length) {
+                    const plugins = [];
+                    options.plugins.forEach(plugin => {
+                        if (bannedPluginNames.indexOf(plugin.name) === -1) {
+                            plugins.push(plugin);
+                        }
+                    });
+                    projectOptions.plugins = plugins;
+                    basePath = path.dirname(options.input);
+                }
             }
 
             return null;
@@ -69,7 +73,11 @@ module.exports = function workerLoaderPlugin(config = null) {
                         exclude.delete(id);
                         if (chunk !== null) {
                             let source = utils.extractSource(chunk.code, chunk.exports);
-                            resolve({ code: utils.buildWorkerCode(source, sourcemap ? chunk.map : null) });
+                            let map = null;
+                            if (sourcemap) {
+                                map = utils.fixMapSources(chunk, basePath);
+                            }
+                            resolve({ code: utils.buildWorkerCode(source, map) });
                         } else {
                             resolve(null);
                         }
@@ -81,7 +89,7 @@ module.exports = function workerLoaderPlugin(config = null) {
         }),
 
         transform: (code, id) => {
-            if (idMap.has(id)) {
+            if (idMap.has(id) && !exclude.has(id)) {
                 const inputOptions = idMap.get(id);
                 return { code, map: `{"version":3,"file":"${path.basename(inputOptions.input)}","sources":[],"sourcesContent":[],"names":[],"mappings":""}` };
             }
