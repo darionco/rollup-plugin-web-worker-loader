@@ -61,6 +61,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                 const inputOptions = idMap.get(id);
                 exclude.set(id, true);
                 rollup.rollup(inputOptions).then(bundle => {
+                    exclude.delete(id);
                     bundle.generate({ format: 'es', name: id, sourcemap: true }).then( result => {
                         const output = result.output;
                         let chunk = null;
@@ -70,7 +71,6 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 break;
                             }
                         }
-                        exclude.delete(id);
                         if (chunk !== null) {
                             let source = utils.extractSource(chunk.code, chunk.exports);
                             let map = null;
@@ -82,7 +82,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                             resolve(null);
                         }
                     }).catch(reject);
-                }).catch(reject);
+                }).catch(reason => { exclude.delete(id); reject(reason); });
             } else {
                 resolve(null);
             }
