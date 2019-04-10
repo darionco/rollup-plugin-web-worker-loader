@@ -73,6 +73,12 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 }
                             }
                             if (chunk !== null) {
+                                /* add dependencies to watch list */
+                                const deps = Object.keys(chunk.modules);
+                                for (const dep of deps) {
+                                    this.addWatchFile(dep);
+                                }
+
                                 let source = utils.extractSource(chunk.code, chunk.exports);
                                 let map = null;
                                 if (sourcemap) {
