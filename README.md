@@ -2,7 +2,7 @@
 
 Rollup plugin to handle Web Workers.
 
-Can inline the worker code or emit a script file using code-split.  
+Can inline the worker code or emit a script file using code-splitting.  
 Handles Worker dependencies and can emit source maps.  
 Worker dependencies are added to Rollup's watch list.  
 
