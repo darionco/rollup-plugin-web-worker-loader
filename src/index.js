@@ -17,7 +17,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     return {
         name: 'worker-loader',
 
-        options: options => {
+        options(options ) {
             if (!projectOptions) {
                 projectOptions = Object.assign({}, options);
                 if (options.plugins && options.plugins.length) {
@@ -35,7 +35,7 @@ module.exports = function workerLoaderPlugin(config = null) {
             return null;
         },
 
-        resolveId: (importee, importer) => {
+        resolveId(importee, importer) {
             if (importee === 'rollup-plugin-web-worker-loader-helper') {
                 return path.resolve(__dirname, 'createWorkerFactory.js');
             } else if (importee.indexOf('web-worker:') === 0) {
@@ -56,39 +56,44 @@ module.exports = function workerLoaderPlugin(config = null) {
             return null;
         },
 
-        load: id => new Promise((resolve, reject) => {
-            if (idMap.has(id) && !exclude.has(id)) {
-                const inputOptions = idMap.get(id);
-                exclude.set(id, true);
-                rollup.rollup(inputOptions).then(bundle => {
-                    exclude.delete(id);
-                    bundle.generate({ format: 'es', name: id, sourcemap: true }).then( result => {
-                        const output = result.output;
-                        let chunk = null;
-                        for (const ch of output) {
-                            if (!ch.isAsset) {
-                                chunk = ch;
-                                break;
+        load(id) {
+            return new Promise((resolve, reject) => {
+                if (idMap.has(id) && !exclude.has(id)) {
+                    const inputOptions = idMap.get(id);
+                    exclude.set(id, true);
+                    rollup.rollup(inputOptions).then(bundle => {
+                        exclude.delete(id);
+                        bundle.generate({format: 'es', name: id, sourcemap: true}).then(result => {
+                            const output = result.output;
+                            let chunk = null;
+                            for (const ch of output) {
+                                if (!ch.isAsset) {
+                                    chunk = ch;
+                                    break;
+                                }
                             }
-                        }
-                        if (chunk !== null) {
-                            let source = utils.extractSource(chunk.code, chunk.exports);
-                            let map = null;
-                            if (sourcemap) {
-                                map = utils.fixMapSources(chunk, basePath);
+                            if (chunk !== null) {
+                                let source = utils.extractSource(chunk.code, chunk.exports);
+                                let map = null;
+                                if (sourcemap) {
+                                    map = utils.fixMapSources(chunk, basePath);
+                                }
+                                resolve({code: utils.buildWorkerCode(source, map)});
+                            } else {
+                                resolve(null);
                             }
-                            resolve({ code: utils.buildWorkerCode(source, map) });
-                        } else {
-                            resolve(null);
-                        }
-                    }).catch(reject);
-                }).catch(reason => { exclude.delete(id); reject(reason); });
-            } else {
-                resolve(null);
-            }
-        }),
+                        }).catch(reject);
+                    }).catch(reason => {
+                        exclude.delete(id);
+                        reject(reason);
+                    });
+                } else {
+                    resolve(null);
+                }
+            })
+        },
 
-        transform: (code, id) => {
+        transform(code, id) {
             if (idMap.has(id) && !exclude.has(id)) {
                 const inputOptions = idMap.get(id);
                 return { code, map: `{"version":3,"file":"${path.basename(inputOptions.input)}","sources":[],"sourcesContent":[],"names":[],"mappings":""}` };
