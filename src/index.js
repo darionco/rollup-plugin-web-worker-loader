@@ -8,14 +8,17 @@ const bannedPluginNames = [
 
 module.exports = function workerLoaderPlugin(config = null) {
     const sourcemap = (config && config.sourcemap) || false;
+    const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
+    let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
 
     const idMap = new Map();
     const exclude = new Map();
     let projectOptions = null;
     let basePath = null;
+    let configuredFileName = null;
 
     return {
-        name: 'worker-loader',
+        name: 'web-worker-loader',
 
         options(options ) {
             if (!projectOptions) {
@@ -37,7 +40,7 @@ module.exports = function workerLoaderPlugin(config = null) {
 
         resolveId(importee, importer) {
             if (importee === 'rollup-plugin-web-worker-loader-helper') {
-                return path.resolve(__dirname, 'createWorkerFactory.js');
+                return path.resolve(__dirname, 'WorkerLoaderHelper.js');
             } else if (importee.indexOf('web-worker:') === 0) {
                 const name = importee.split(':')[1];
                 const folder = path.dirname(importer);
@@ -46,9 +49,15 @@ module.exports = function workerLoaderPlugin(config = null) {
 
                 const target = require.resolve(name, { paths });
                 if (target && !idMap.has(importee)) {
-                    idMap.set(target, Object.assign({}, projectOptions, {
+                    const inputOptions = Object.assign({}, projectOptions, {
                         input: target,
-                    }));
+                    });
+
+                    idMap.set(target, {
+                        workerID: `web-worker-${idMap.size}.js`,
+                        chunk: null,
+                        inputOptions,
+                    });
 
                     return target;
                 }
@@ -59,7 +68,31 @@ module.exports = function workerLoaderPlugin(config = null) {
         load(id) {
             return new Promise((resolve, reject) => {
                 if (idMap.has(id) && !exclude.has(id)) {
-                    const inputOptions = idMap.get(id);
+                    if (!inline) {
+                        /* inline requires rollup version 1.9.2 or higher */
+                        const version = this.meta.rollupVersion.split('.');
+                        if (version.length !== 3) {
+                            this.warn('Unknown rollup version');
+                            inline = true;
+                        } else {
+                            const major = parseInt(version[0], 10);
+                            const minor = parseInt(version[1], 10);
+                            const patch = parseInt(version[2], 10);
+                            if (
+                                isNaN(major) ||
+                                isNaN(minor) ||
+                                isNaN(patch) ||
+                                major < 1 ||
+                                minor < 9 ||
+                                patch < 2
+                            ) {
+                                this.warn(`Rollup version 1.9.2 or higher is required for emitting a worker file (current version:${this.meta.rollupVersion}). See https://github.com/rollup/rollup/issues/2801`);
+                                inline = true;
+                            }
+                        }
+                    }
+
+                    const {inputOptions, workerID} = idMap.get(id);
                     exclude.set(id, true);
                     rollup.rollup(inputOptions).then(bundle => {
                         exclude.delete(id);
@@ -79,12 +112,20 @@ module.exports = function workerLoaderPlugin(config = null) {
                                     this.addWatchFile(dep);
                                 }
 
-                                let source = utils.extractSource(chunk.code, chunk.exports);
                                 let map = null;
-                                if (sourcemap) {
-                                    map = utils.fixMapSources(chunk, basePath);
+                                let source;
+                                if (inline) {
+                                    source = utils.extractSource(chunk.code, chunk.exports);
+                                    map = null;
+                                    if (sourcemap) {
+                                        map = utils.fixMapSources(chunk, basePath);
+                                    }
+                                } else {
+                                    source = path.join(loadPath, workerID);
+                                    chunk.fileName = workerID;
+                                    idMap.get(id).chunk = chunk;
                                 }
-                                resolve({code: utils.buildWorkerCode(source, map)});
+                                resolve({code: utils.buildWorkerCode(source, map, inline)});
                             } else {
                                 resolve(null);
                             }
@@ -101,10 +142,34 @@ module.exports = function workerLoaderPlugin(config = null) {
 
         transform(code, id) {
             if (idMap.has(id) && !exclude.has(id)) {
-                const inputOptions = idMap.get(id);
+                const {inputOptions} = idMap.get(id);
                 return { code, map: `{"version":3,"file":"${path.basename(inputOptions.input)}","sources":[],"sourcesContent":[],"names":[],"mappings":""}` };
             }
             return null;
+        },
+
+        outputOptions(options) {
+            if (!inline && options.file && !options.dir) {
+                configuredFileName = path.basename(options.file);
+                return Object.assign({}, options, {
+                    file: null,
+                    dir: path.dirname(options.file),
+                });
+            }
+            return null;
+        },
+
+        generateBundle(options, bundle, isWrite) {
+            if (!inline && isWrite) {
+                if (configuredFileName && Object.keys(bundle).length === 1) {
+                    bundle[Object.keys(bundle)[0]].fileName = configuredFileName;
+                }
+                for (const worker of idMap) {
+                    if (worker[1].chunk && !bundle[worker[1].workerID]) {
+                        bundle[worker[1].workerID] = worker[1].chunk;
+                    }
+                }
+            }
         },
     };
 };

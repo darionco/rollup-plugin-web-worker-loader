@@ -27,11 +27,20 @@ function extractSource(code, exports) {
     return `/* rollup-plugin-web-worker-loader */function () {\n${source}}\n`;
 }
 
-function buildWorkerCode(code, sourcemap = null) {
+function buildWorkerCode(source, sourcemap = null, inline = true) {
+    if (inline) {
+        return `\
+/* eslint-disable */\n\
+import {createInlineWorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
+const WorkerFactory = createInlineWorkerFactory(${source.substring(0, source.length - 1)}, ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
+export default WorkerFactory;\n\
+/* eslint-enable */\n`;
+    }
+
     return `\
 /* eslint-disable */\n\
-import {createWorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
-const WorkerFactory = createWorkerFactory(${code.substring(0, code.length - 1)}, ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
+import {createURLWorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
+const WorkerFactory = createURLWorkerFactory('${source}');\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;
 }

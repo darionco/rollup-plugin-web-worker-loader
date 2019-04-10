@@ -1,4 +1,4 @@
-export function createWorkerFactory(fn, sourcemap = null) {
+export function createInlineWorkerFactory(fn, sourcemap = null) {
     const source = fn.toString();
     const start = source.indexOf('\n', 10) + 1;
     const end = source.indexOf('}', source.length - 1);
@@ -9,4 +9,10 @@ export function createWorkerFactory(fn, sourcemap = null) {
     return function WorkerFactory(options) {
         return new Worker(url, options);
     };
+}
+
+export function createURLWorkerFactory(url) {
+    return function WorkerFactory(options) {
+        return new Worker(url, options);
+    }
 }
