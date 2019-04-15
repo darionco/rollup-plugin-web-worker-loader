@@ -137,7 +137,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                 } else {
                     resolve(null);
                 }
-            })
+            });
         },
 
         transform(code, id) {

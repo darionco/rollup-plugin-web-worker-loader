@@ -7,10 +7,10 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
 
     if (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') {
         /* node.js */
-        const Worker = require('worker_threads').Worker;
-        const source = lines.join('\n');
+        const Worker = require('worker_threads').Worker; // eslint-disable-line
+        const concat = lines.join('\n');
         return function WorkerFactory(options) {
-            return new Worker(source, Object.assign({}, options, { eval: true }));
+            return new Worker(concat, Object.assign({}, options, { eval: true }));
         };
     }
 
@@ -25,13 +25,13 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
 export function createURLWorkerFactory(url) {
     if (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') {
         /* node.js */
-        const Worker = require('worker_threads').Worker;
+        const Worker = require('worker_threads').Worker; // eslint-disable-line
         return function WorkerFactory(options) {
             return new Worker(url, options);
-        }
+        };
     }
     /* browser */
     return function WorkerFactory(options) {
         return new Worker(url, options);
-    }
+    };
 }
