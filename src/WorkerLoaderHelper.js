@@ -1,13 +1,17 @@
+const kIsNodeJS = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
+const kRequire = kIsNodeJS ? module.require : null; // eslint-disable-line
+
 export function createInlineWorkerFactory(fn, sourcemap = null) {
     const source = fn.toString();
     const start = source.indexOf('\n', 10) + 1;
     const end = source.indexOf('}', source.length - 1);
     const body = source.substring(start, end) + (sourcemap ? `//# sourceMappingURL=${sourcemap}` : '');
-    const lines = body.split('\n').map(line => line.substring(4) + '\n');
+    const blankPrefixLength = body.search(/\S/);
+    const lines = body.split('\n').map(line => line.substring(blankPrefixLength) + '\n');
 
-    if (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') {
+    if (kIsNodeJS) {
         /* node.js */
-        const Worker = require('worker_threads').Worker; // eslint-disable-line
+        const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
         const concat = lines.join('\n');
         return function WorkerFactory(options) {
             return new Worker(concat, Object.assign({}, options, { eval: true }));
@@ -23,9 +27,9 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
 }
 
 export function createURLWorkerFactory(url) {
-    if (Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]') {
+    if (kIsNodeJS) {
         /* node.js */
-        const Worker = require('worker_threads').Worker; // eslint-disable-line
+        const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
         return function WorkerFactory(options) {
             return new Worker(url, options);
         };
