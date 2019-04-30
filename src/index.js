@@ -83,8 +83,8 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 isNaN(minor) ||
                                 isNaN(patch) ||
                                 major < 1 ||
-                                minor < 9 ||
-                                patch < 2
+                                (major === 1 && minor < 9) ||
+                                (major === 1 && minor === 9 && patch < 2)
                             ) {
                                 this.warn(`Rollup version 1.9.2 or higher is required for emitting a worker file (current version:${this.meta.rollupVersion}). See https://github.com/rollup/rollup/issues/2801`);
                                 inline = true;
