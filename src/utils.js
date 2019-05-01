@@ -1,6 +1,6 @@
 const path = require('path');
 
-function extractSource(code, exports) {
+function extractSource(code, exports, asFunction = true) {
     let source;
     if (exports.length) {
         let start;
@@ -24,15 +24,27 @@ function extractSource(code, exports) {
         source = code;
     }
 
-    return `/* rollup-plugin-web-worker-loader */function () {\n${source}}\n`;
+    if (asFunction) {
+        return `/* rollup-plugin-web-worker-loader */function () {\n${source}}\n`;
+    }
+    return `/* rollup-plugin-web-worker-loader */\n${source}\n`;
 }
 
-function buildWorkerCode(source, sourcemap = null, inline = true) {
+function buildWorkerCode(source, sourcemap = null, inline = true, preserveSource = false) {
     if (inline) {
-        return `\
+        if (preserveSource) {
+            return `\
 /* eslint-disable */\n\
 import {createInlineWorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
 const WorkerFactory = createInlineWorkerFactory(${source.substring(0, source.length - 1)}, ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
+export default WorkerFactory;\n\
+/* eslint-enable */\n`;
+        }
+
+        return `\
+/* eslint-disable */\n\
+import {createBase64WorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
+const WorkerFactory = createBase64WorkerFactory('${Buffer.from(source).toString('base64')}', ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;
     }

@@ -39,3 +39,24 @@ export function createURLWorkerFactory(url) {
         return new Worker(url, options);
     };
 }
+
+export function createBase64WorkerFactory(base64, sourcemap = null) {
+    const source = kIsNodeJS ? Buffer.from(base64, 'base64').toString('ascii') : atob(base64);
+    const start = source.indexOf('\n', 10) + 1;
+    const body = source.substring(start) + (sourcemap ? `//# sourceMappingURL=${sourcemap}` : '');
+
+    if (kIsNodeJS) {
+        /* node.js */
+        const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
+        return function WorkerFactory(options) {
+            return new Worker(body, Object.assign({}, options, { eval: true }));
+        };
+    }
+
+    /* browser */
+    const blob = new Blob([body], { type: 'application/javascript' });
+    const url = URL.createObjectURL(blob);
+    return function WorkerFactory(options) {
+        return new Worker(url, options);
+    };
+}

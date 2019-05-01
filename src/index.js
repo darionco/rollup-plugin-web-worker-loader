@@ -9,6 +9,7 @@ const bannedPluginNames = [
 module.exports = function workerLoaderPlugin(config = null) {
     const sourcemap = (config && config.sourcemap) || false;
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
+    const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
 
     const idMap = new Map();
@@ -48,17 +49,18 @@ module.exports = function workerLoaderPlugin(config = null) {
                 paths.push(folder);
 
                 const target = require.resolve(name, { paths });
-                if (target && !idMap.has(importee)) {
-                    const inputOptions = Object.assign({}, projectOptions, {
-                        input: target,
-                    });
+                if (target) {
+                    if (!idMap.has(target)) {
+                        const inputOptions = Object.assign({}, projectOptions, {
+                            input: target,
+                        });
 
-                    idMap.set(target, {
-                        workerID: `web-worker-${idMap.size}.js`,
-                        chunk: null,
-                        inputOptions,
-                    });
-
+                        idMap.set(target, {
+                            workerID: `web-worker-${idMap.size}.js`,
+                            chunk: null,
+                            inputOptions,
+                        });
+                    }
                     return target;
                 }
             }
@@ -115,7 +117,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 let map = null;
                                 let source;
                                 if (inline) {
-                                    source = utils.extractSource(chunk.code, chunk.exports);
+                                    source = utils.extractSource(chunk.code, chunk.exports, preserveSource);
                                     map = null;
                                     if (sourcemap) {
                                         map = utils.fixMapSources(chunk, basePath);
@@ -125,7 +127,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                                     chunk.fileName = workerID;
                                     idMap.get(id).chunk = chunk;
                                 }
-                                resolve({code: utils.buildWorkerCode(source, map, inline)});
+                                resolve({code: utils.buildWorkerCode(source, map, inline, preserveSource)});
                             } else {
                                 resolve(null);
                             }
