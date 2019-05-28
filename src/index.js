@@ -123,7 +123,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                                         map = utils.fixMapSources(chunk, basePath);
                                     }
                                 } else {
-                                    source = path.join(loadPath, workerID);
+                                    source = path.posix.join(loadPath, workerID);
                                     chunk.fileName = workerID;
                                     idMap.get(id).chunk = chunk;
                                 }
