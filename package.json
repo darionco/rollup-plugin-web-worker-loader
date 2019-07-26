@@ -17,6 +17,6 @@
     "worker"
   ],
   "devDependencies": {
-    "eslint": "^5.15.3"
+    "eslint": "^6.1.0"
   }
 }
