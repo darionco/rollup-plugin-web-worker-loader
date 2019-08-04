@@ -1,5 +1,5 @@
 const kIsNodeJS = Object.prototype.toString.call(typeof process !== 'undefined' ? process : 0) === '[object process]';
-const kRequire = kIsNodeJS ? module.require : null; // eslint-disable-line
+const kRequire = kIsNodeJS && typeof module.require === 'function' ? module.require : null; // eslint-disable-line
 
 export function createInlineWorkerFactory(fn, sourcemap = null) {
     const source = fn.toString();
@@ -9,7 +9,7 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
     const blankPrefixLength = body.search(/\S/);
     const lines = body.split('\n').map(line => line.substring(blankPrefixLength) + '\n');
 
-    if (kIsNodeJS) {
+    if (kRequire) {
         /* node.js */
         const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
         const concat = lines.join('\n');
@@ -27,7 +27,7 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
 }
 
 export function createURLWorkerFactory(url) {
-    if (kIsNodeJS) {
+    if (kRequire) {
         /* node.js */
         const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
         return function WorkerFactory(options) {
@@ -45,7 +45,7 @@ export function createBase64WorkerFactory(base64, sourcemap = null) {
     const start = source.indexOf('\n', 10) + 1;
     const body = source.substring(start) + (sourcemap ? `//# sourceMappingURL=${sourcemap}` : '');
 
-    if (kIsNodeJS) {
+    if (kRequire) {
         /* node.js */
         const Worker = kRequire('worker_threads').Worker; // eslint-disable-line
         return function WorkerFactory(options) {
