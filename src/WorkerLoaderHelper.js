@@ -5,7 +5,7 @@ export function createInlineWorkerFactory(fn, sourcemap = null) {
     const source = fn.toString();
     const start = source.indexOf('\n', 10) + 1;
     const end = source.indexOf('}', source.length - 1);
-    const body = source.substring(start, end) + (sourcemap ? `//# sourceMappingURL=${sourcemap}` : '');
+    const body = source.substring(start, end) + (sourcemap ? `\/\/# sourceMappingURL=${sourcemap}` : '');
     const blankPrefixLength = body.search(/\S/);
     const lines = body.split('\n').map(line => line.substring(blankPrefixLength) + '\n');
 
@@ -43,7 +43,7 @@ export function createURLWorkerFactory(url) {
 export function createBase64WorkerFactory(base64, sourcemap = null) {
     const source = kIsNodeJS ? Buffer.from(base64, 'base64').toString('ascii') : atob(base64);
     const start = source.indexOf('\n', 10) + 1;
-    const body = source.substring(start) + (sourcemap ? `//# sourceMappingURL=${sourcemap}` : '');
+    const body = source.substring(start) + (sourcemap ? `\/\/# sourceMappingURL=${sourcemap}` : '');
 
     if (kIsNodeJS) {
         /* node.js */
