@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-web-worker-loader",
-  "version": "0.5.2",
+  "version": "0.6.0",
   "description": "Rollup plugin to handle Web Workers",
   "main": "src/index.js",
   "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
