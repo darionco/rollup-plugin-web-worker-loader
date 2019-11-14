@@ -30,7 +30,7 @@ function extractSource(code, exports, asFunction = true) {
     return `/* rollup-plugin-web-worker-loader */\n${source}\n`;
 }
 
-function buildWorkerCode(source, sourcemap = null, inline = true, preserveSource = false) {
+function buildWorkerCode(source, sourcemap = null, inline = true, preserveSource = false, enableUnicode = false) {
     if (inline) {
         if (preserveSource) {
             return `\
@@ -44,7 +44,7 @@ export default WorkerFactory;\n\
         return `\
 /* eslint-disable */\n\
 import {createBase64WorkerFactory} from 'rollup-plugin-web-worker-loader-helper';\n\
-const WorkerFactory = createBase64WorkerFactory('${Buffer.from(source).toString('base64')}', ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
+const WorkerFactory = createBase64WorkerFactory('${Buffer.from(source, enableUnicode ? 'utf16le' : 'utf8').toString('base64')}', ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'}, ${enableUnicode.toString()});\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;
     }

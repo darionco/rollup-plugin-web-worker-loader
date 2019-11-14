@@ -10,6 +10,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     const sourcemap = (config && config.sourcemap) || false;
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
+    const enableUnicode = config && config.hasOwnProperty('enableUnicodeSupport') ? config.enableUnicodeSupport : false;
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
 
     const idMap = new Map();
@@ -21,7 +22,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     return {
         name: 'web-worker-loader',
 
-        options(options ) {
+        options(options) {
             if (!projectOptions) {
                 projectOptions = Object.assign({}, options);
                 if (options.plugins && options.plugins.length) {
@@ -127,7 +128,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                                     chunk.fileName = workerID;
                                     idMap.get(id).chunk = chunk;
                                 }
-                                resolve({code: utils.buildWorkerCode(source, map, inline, preserveSource)});
+                                resolve({code: utils.buildWorkerCode(source, map, inline, preserveSource, enableUnicode)});
                             } else {
                                 resolve(null);
                             }

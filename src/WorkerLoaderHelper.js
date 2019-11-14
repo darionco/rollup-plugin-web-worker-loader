@@ -40,8 +40,24 @@ export function createURLWorkerFactory(url) {
     };
 }
 
-export function createBase64WorkerFactory(base64, sourcemap = null) {
-    const source = kIsNodeJS ? Buffer.from(base64, 'base64').toString('ascii') : atob(base64);
+export function browserDecodeBase64(base64, enableUnicode) {
+    const binaryString = atob(base64);
+    if (enableUnicode) {
+        const binaryView = new Uint8Array(binaryString.length);
+        Array.prototype.forEach.call(binaryView, (el, idx, arr) => {
+            arr[idx] = binaryString.charCodeAt(idx);
+        });
+        return String.fromCharCode.apply(null, new Uint16Array(binaryView.buffer));
+    }
+    return binaryString;
+}
+
+export function nodeDecodeBase64(base64, enableUnicode) {
+    return Buffer.from(base64, 'base64').toString(enableUnicode ? 'utf16' : 'utf8');
+}
+
+export function createBase64WorkerFactory(base64, sourcemap = null, enableUnicode = false) {
+    const source = kIsNodeJS ? nodeDecodeBase64(base64, enableUnicode) : browserDecodeBase64(base64, enableUnicode);
     const start = source.indexOf('\n', 10) + 1;
     const body = source.substring(start) + (sourcemap ? `\/\/# sourceMappingURL=${sourcemap}` : '');
 
