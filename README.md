@@ -40,15 +40,19 @@ dataWorker.postMessage('Hello World!');
 The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
-    sourcemap?: boolean,        // when inlined, should a source map be included in the final output. Default: false
+    sourcemap?: boolean,            // when inlined, should a source map be included in the final output. Default: false
     
-    inline?: boolean,           // should the worker code be inlined (Base64). Default: true
+    inline?: boolean,               // should the worker code be inlined (Base64). Default: true
     
-    preserveSource?: boolean,   // when inlined and this option is enabled, the full source code is included in the
-                                // built file, otherwise it's embedded as a base64 string. Default: false
+    preserveSource?: boolean,       // when inlined and this option is enabled, the full source code is included in the
+                                    // built file, otherwise it's embedded as a base64 string. Default: false
+
+    enableUnicodeSupport?: boolean, // when inlined in Base64 format, this options enables unicode support (UTF16) this
+                                    // flag is disabled by default because supporting UTF16 doubles the size of the final
+                                    // payload. Default: false
                                 
-    loadPath?: string           // this options is useful when the worker scripts need to be loaded from another folder.
-                                // Default: ''
+    loadPath?: string,              // this options is useful when the worker scripts need to be loaded from another folder.
+                                    // Default: ''
 })
 ```
 
@@ -66,6 +70,6 @@ The `sourcemap` configuration option is ignored when `inline` is set to `false`,
 - [x] Include source map
 - [x] Configuration options to inline or code-split workers
 - [ ] Provide capability checks and fallbacks
-- [ ] Avoid code duplication
+- [ ] ~~Avoid code duplication~~ DROPPED (there are better solutions for this purpose)
 
 
