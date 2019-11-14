@@ -9,6 +9,7 @@ function extractSource(code, exports, asFunction = true) {
 
         source = code;
         start = source.indexOf('export { ');
+        start = start === -1 ? source.indexOf('export default') : start;
         while (start !== -1) {
             comment = '';
             for (i = start; i < source.length; ++i) {
@@ -19,6 +20,7 @@ function extractSource(code, exports, asFunction = true) {
             }
             source = source.substring(0, start) + comment + source.substring(i);
             start = source.indexOf('export { ');
+            start = start === -1 ? source.indexOf('export default') : start;
         }
     } else {
         source = code;
