@@ -1,3 +1,4 @@
+const fs = require('fs');
 const path = require('path');
 const rollup = require('rollup');
 const utils = require('./utils');
@@ -12,13 +13,17 @@ module.exports = function workerLoaderPlugin(config = null) {
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
     const enableUnicode = config && config.hasOwnProperty('enableUnicodeSupport') ? config.enableUnicodeSupport : false;
     const pattern = config && config.hasOwnProperty('pattern') ? config.pattern : /web-worker:(.+)/;
-    let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
 
+    let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
+    const forceInline = inline && config && config.hasOwnProperty('forceInline') ? config.forceInline : false;
+
+    const helperPattern = /rollup-plugin-web-worker-loader::helper(?:::[0-9]+)?$/;
     const idMap = new Map();
     const exclude = new Set();
     let projectOptions = null;
     let basePath = null;
     let configuredFileName = null;
+    let forceInlineCounter = 0;
 
     return {
         name: 'web-worker-loader',
@@ -87,6 +92,9 @@ module.exports = function workerLoaderPlugin(config = null) {
         resolveId(importee, importer) {
             const match = importee.match(pattern);
             if (importee === 'rollup-plugin-web-worker-loader::helper') {
+                if (forceInline) {
+                    return `${importee}::${forceInlineCounter++}`;
+                }
                 return path.resolve(__dirname, 'WorkerLoaderHelper.js');
             } else if (match && match.length) {
                 const name = match[match.length - 1];
@@ -102,8 +110,8 @@ module.exports = function workerLoaderPlugin(config = null) {
                     }
 
                     if (target) {
-                        const prefixed = `\0rollup-plugin-worker-loader::module:${name}`;
-                        if (!idMap.has(prefixed) && !exclude.has(target)) {
+                        const prefixed = `\0rollup-plugin-worker-loader::module:${forceInline ? `:${forceInlineCounter++}:` : ''}${name}`;
+                        if (!idMap.has(prefixed)) {
                             const inputOptions = Object.assign({}, projectOptions, {
                                 input: target,
                             });
@@ -114,6 +122,9 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 inputOptions,
                                 target,
                             });
+                        }
+
+                        if (idMap.has(prefixed)) {
                             return prefixed;
                         }
                         return target;
@@ -125,7 +136,14 @@ module.exports = function workerLoaderPlugin(config = null) {
 
         load(id) {
             return new Promise((resolve, reject) => {
-                if (idMap.has(id) && !exclude.has(id)) {
+                if (helperPattern.test(id)) {
+                    fs.readFile(path.resolve(__dirname, 'WorkerLoaderHelper.js'), 'utf8', (err, data) => {
+                        if (err) {
+                            reject(err);
+                        }
+                        resolve(data);
+                    });
+                } else if (idMap.has(id) && !exclude.has(id)) {
                     if (!inline) {
                         /* inline requires rollup version 1.9.2 or higher */
                         const version = this.meta.rollupVersion.split('.');
