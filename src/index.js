@@ -11,10 +11,11 @@ module.exports = function workerLoaderPlugin(config = null) {
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
     const enableUnicode = config && config.hasOwnProperty('enableUnicodeSupport') ? config.enableUnicodeSupport : false;
+    const pattern = config && config.hasOwnProperty('pattern') ? config.pattern : /web-worker:(.+)/;
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
 
     const idMap = new Map();
-    const exclude = new Map();
+    const exclude = new Set();
     let projectOptions = null;
     let basePath = null;
     let configuredFileName = null;
@@ -41,28 +42,39 @@ module.exports = function workerLoaderPlugin(config = null) {
         },
 
         resolveId(importee, importer) {
+            const match = importee.match(pattern);
             if (importee === 'rollup-plugin-web-worker-loader::helper') {
                 return path.resolve(__dirname, 'WorkerLoaderHelper.js');
-            } else if (importee.indexOf('web-worker:') === 0) {
-                const name = importee.split(':')[1];
-                const folder = path.dirname(importer);
-                const paths = require.resolve.paths(importer);
-                paths.push(folder);
-
-                const target = require.resolve(name, { paths });
-                if (target) {
-                    if (!idMap.has(target)) {
-                        const inputOptions = Object.assign({}, projectOptions, {
-                            input: target,
-                        });
-
-                        idMap.set(target, {
-                            workerID: `web-worker-${idMap.size}.js`,
-                            chunk: null,
-                            inputOptions,
-                        });
+            } else if (match && match.length) {
+                const name = match[match.length - 1];
+                if (!idMap.has(name)) {
+                    let target = null;
+                    if (importer) {
+                        const folder = path.dirname(importer);
+                        const paths = require.resolve.paths(importer);
+                        paths.push(folder);
+                        target = require.resolve(name, {paths});
+                    } else if (path.isAbsolute(name)) {
+                        target = name;
                     }
-                    return target;
+
+                    if (target) {
+                        const prefixed = `\0rollup-plugin-worker-loader::module:${name}`;
+                        if (!idMap.has(prefixed) && !exclude.has(target)) {
+                            const inputOptions = Object.assign({}, projectOptions, {
+                                input: target,
+                            });
+
+                            idMap.set(prefixed, {
+                                workerID: `web-worker-${idMap.size}.js`,
+                                chunk: null,
+                                inputOptions,
+                                target,
+                            });
+                            return prefixed;
+                        }
+                        return target;
+                    }
                 }
             }
             return null;
@@ -95,10 +107,12 @@ module.exports = function workerLoaderPlugin(config = null) {
                         }
                     }
 
-                    const {inputOptions, workerID} = idMap.get(id);
-                    exclude.set(id, true);
+                    const {inputOptions, workerID, target} = idMap.get(id);
+                    exclude.add(id);
+                    exclude.add(target);
                     rollup.rollup(inputOptions).then(bundle => {
                         exclude.delete(id);
+                        exclude.delete(target);
                         bundle.generate({format: 'es', name: id, sourcemap: true}).then(result => {
                             const output = result.output;
                             let chunk = null;
@@ -135,6 +149,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                         }).catch(reject);
                     }).catch(reason => {
                         exclude.delete(id);
+                        exclude.delete(target);
                         reject(reason);
                     });
                 } else {
