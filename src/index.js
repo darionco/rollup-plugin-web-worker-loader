@@ -41,7 +41,7 @@ module.exports = function workerLoaderPlugin(config = null) {
         },
 
         resolveId(importee, importer) {
-            if (importee === 'rollup-plugin-web-worker-loader-helper') {
+            if (importee === 'rollup-plugin-web-worker-loader::helper') {
                 return path.resolve(__dirname, 'WorkerLoaderHelper.js');
             } else if (importee.indexOf('web-worker:') === 0) {
                 const name = importee.split(':')[1];
