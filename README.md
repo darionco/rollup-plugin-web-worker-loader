@@ -27,9 +27,11 @@ export default {
 };
 ```
 
-Bundle the worker code using the prefix `web-worker:` in your imports:
+Bundle the worker code using the RegEx pattern specified in the plugin's configuration.  
+By default you can add the prefix `web-worker:` to your imports:
 
 ```javascript
+// here we use the default pattern but any RegEx can be configured
 import DataWorker from 'web-worker:./DataWorker';
 
 const dataWorker = new DataWorker();
@@ -40,6 +42,10 @@ dataWorker.postMessage('Hello World!');
 The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
+    pattern?: regex,                // a RegEx instance describing the pattern that matches the files to import as
+                                    // web workers. If capturing groups are present, the plugin uses the contents of the
+                                    // last capturing group as the path to the worker script. Default: /web-worker:(.+)/
+
     sourcemap?: boolean,            // when inlined, should a source map be included in the final output. Default: false
     
     inline?: boolean,               // should the worker code be inlined (Base64). Default: true
