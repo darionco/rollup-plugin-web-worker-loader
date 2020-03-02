@@ -12,8 +12,8 @@ module.exports = function workerLoaderPlugin(config = null) {
     const skipPlugins = new Set(config && config.hasOwnProperty('skipPlugins') ? config.skipPlugins : [
         'liveServer',
         'serve',
-        'livereload'
-    ])
+        'livereload',
+    ]);
 
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
     const forceInline = inline && config && config.hasOwnProperty('forceInline') ? config.forceInline : false;
@@ -35,7 +35,7 @@ module.exports = function workerLoaderPlugin(config = null) {
                 if (options.plugins && options.plugins.length) {
                     const plugins = [];
                     options.plugins.forEach(plugin => {
-                        if (skipPlugins.has(plugin.name)) return
+                        if (skipPlugins.has(plugin.name)) return;
 
                         plugins.push(plugin);
                     });
