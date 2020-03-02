@@ -43,22 +43,22 @@ module.exports = function workerLoaderPlugin(config = null) {
                     const cwd = process.cwd();
                     if (typeof options.input === 'string') {
                         try {
-                            const entry = require.resolve(options.input, {paths:[cwd]});
+                            const entry = require.resolve(options.input, { paths: [cwd] });
                             basePath = path.dirname(entry);
-                        } catch (e) {}
+                        } catch (e) { /* EMPTY */ }
                     } else if (Array.isArray(options.input)) {
                         let componentCount = Number.MAX_SAFE_INTEGER;
                         let shortestPath = null;
-                        for (let i = 0,n = options.input.length; i < n; ++i) {
+                        for (let i = 0, n = options.input.length; i < n; ++i) {
                             try {
-                                const entry = require.resolve(options.input[i], {paths:[cwd]});
+                                const entry = require.resolve(options.input[i], { paths: [cwd] });
                                 const entryPath = path.dirname(entry);
                                 const components = entryPath.split(path.sep);
                                 if (components.length < componentCount) {
                                     componentCount = components.length;
                                     shortestPath = entryPath;
                                 }
-                            } catch (e) {}
+                            } catch (e) { /* EMPTY */ }
                         }
                         basePath = shortestPath;
                     } else {
@@ -68,14 +68,14 @@ module.exports = function workerLoaderPlugin(config = null) {
                         for (let i = 0, n = keys.length; i < n; ++i) {
                             const input = options.input[keys[i]];
                             try {
-                                const entry = require.resolve(input, {paths:[cwd]});
+                                const entry = require.resolve(input, { paths: [cwd] });
                                 const entryPath = path.dirname(entry);
                                 const components = entryPath.split(path.sep);
                                 if (components.length < componentCount) {
                                     componentCount = components.length;
                                     shortestPath = entryPath;
                                 }
-                            } catch (e) {}
+                            } catch (e) { /* EMPTY */ }
                         }
                         basePath = shortestPath;
                     }
