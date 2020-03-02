@@ -3,16 +3,17 @@ const path = require('path');
 const rollup = require('rollup');
 const utils = require('./utils');
 
-const bannedPluginNames = [
-    'liveServer',
-];
-
 module.exports = function workerLoaderPlugin(config = null) {
     const sourcemap = (config && config.sourcemap) || false;
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
     const enableUnicode = config && config.hasOwnProperty('enableUnicodeSupport') ? config.enableUnicodeSupport : false;
     const pattern = config && config.hasOwnProperty('pattern') ? config.pattern : /web-worker:(.+)/;
+    const skipPlugins = new Set(config && config.hasOwnProperty('skipPlugins') ? config.skipPlugins : [
+        'liveServer',
+        'serve',
+        'livereload'
+    ])
 
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
     const forceInline = inline && config && config.hasOwnProperty('forceInline') ? config.forceInline : false;
@@ -34,9 +35,9 @@ module.exports = function workerLoaderPlugin(config = null) {
                 if (options.plugins && options.plugins.length) {
                     const plugins = [];
                     options.plugins.forEach(plugin => {
-                        if (bannedPluginNames.indexOf(plugin.name) === -1) {
-                            plugins.push(plugin);
-                        }
+                        if (skipPlugins.has(plugin.name)) return
+
+                        plugins.push(plugin);
                     });
                     projectOptions.plugins = plugins;
 
