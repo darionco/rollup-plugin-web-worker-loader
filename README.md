@@ -50,7 +50,7 @@ webWorkerLoader({
 
     inline?: boolean,               // should the worker code be inlined (Base64). Default: true
 
-    forceInlne?: boolean,           // *EXPERIMENTAL* when inlined, forces the code to be included every time it is imported
+    forceInline?: boolean,           // *EXPERIMENTAL* when inlined, forces the code to be included every time it is imported
                                     // useful when using code splitting: Default: false
 
     preserveSource?: boolean,       // when inlined and this option is enabled, the full source code is included in the
