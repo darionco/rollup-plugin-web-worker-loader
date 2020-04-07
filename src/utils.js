@@ -38,7 +38,7 @@ function buildWorkerCode(source, sourcemap = null, inline = true, preserveSource
             return `\
 /* eslint-disable */\n\
 import {createInlineWorkerFactory} from 'rollup-plugin-web-worker-loader::helper';\n\
-var WorkerFactory = createInlineWorkerFactory(${source.substring(0, source.length - 1)}, ${sourcemap ? "'" + sourcemap.toUrl() + "'" : 'null'});\n\
+var WorkerFactory = createInlineWorkerFactory(${source.substring(0, source.length - 1)}, ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'});\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;
         }
@@ -46,7 +46,7 @@ export default WorkerFactory;\n\
         return `\
 /* eslint-disable */\n\
 import {createBase64WorkerFactory} from 'rollup-plugin-web-worker-loader::helper';\n\
-var WorkerFactory = createBase64WorkerFactory('${Buffer.from(source, enableUnicode ? 'utf16le' : 'utf8').toString('base64')}', ${sourcemap ? "'" + sourcemap.toUrl() + "'" : 'null'}, ${enableUnicode.toString()});\n\
+var WorkerFactory = createBase64WorkerFactory('${Buffer.from(source, enableUnicode ? 'utf16le' : 'utf8').toString('base64')}', ${sourcemap ? `'${sourcemap.toUrl()}'` : 'null'}, ${enableUnicode.toString()});\n\
 export default WorkerFactory;\n\
 /* eslint-enable */\n`;
     }
