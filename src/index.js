@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const rollup = require('rollup');
-const utils = require('./utils');
+const fixMapSources = require('./utils/fixMapSources');
+const extractSource = require('./utils/extractSource');
+const buildWorkerCode = require('./utils/buildWorkerCode');
 
 module.exports = function workerLoaderPlugin(config = null) {
-    const sourcemap = (config && config.sourcemap) || false;
+    const targetPlatform = config && config.hasOwnProperty('targetPlatform') ? config.targetPlatform : 'browser';
+    const sourcemap = config && config.hasOwnProperty('sourcemap') ? config.sourcemap : false;
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;
     const enableUnicode = config && config.hasOwnProperty('enableUnicodeSupport') ? config.enableUnicodeSupport : false;
@@ -18,7 +21,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     let inline = config && config.hasOwnProperty('inline') ? config.inline : true;
     const forceInline = inline && config && config.hasOwnProperty('forceInline') ? config.forceInline : false;
 
-    const helperPattern = /rollup-plugin-web-worker-loader::helper(?:::[0-9]+)?$/;
+    const helperPattern = /^\0(?:[0-9]+::)?rollup-plugin-web-worker-loader::helper(?:::)?/;
     const idMap = new Map();
     const exclude = new Set();
     let projectOptions = null;
@@ -92,11 +95,11 @@ module.exports = function workerLoaderPlugin(config = null) {
 
         resolveId(importee, importer) {
             const match = importee.match(pattern);
-            if (importee === 'rollup-plugin-web-worker-loader::helper') {
+            if (importee.startsWith('\0rollup-plugin-web-worker-loader::helper')) {
                 if (forceInline) {
-                    return `${importee}::${forceInlineCounter++}`;
+                    return `\0${forceInlineCounter++}::${importee.substr(1)}`;
                 }
-                return path.resolve(__dirname, 'WorkerLoaderHelper.js');
+                return importee;
             } else if (match && match.length) {
                 const name = match[match.length - 1];
                 if (!idMap.has(name)) {
@@ -137,8 +140,11 @@ module.exports = function workerLoaderPlugin(config = null) {
 
         load(id) {
             return new Promise((resolve, reject) => {
-                if (helperPattern.test(id)) {
-                    fs.readFile(path.resolve(__dirname, 'WorkerLoaderHelper.js'), 'utf8', (err, data) => {
+                const helperMatch = helperPattern.exec(id);
+                if (helperMatch) {
+                    const helperParts = id.substr(helperMatch[0].length).split('::');
+                    const helperPath = path.resolve(__dirname, 'helper', ...helperParts) + '.js';
+                    fs.readFile(helperPath, 'utf8', (err, data) => {
                         if (err) {
                             reject(err);
                         }
@@ -194,17 +200,24 @@ module.exports = function workerLoaderPlugin(config = null) {
                                 let map = null;
                                 let source;
                                 if (inline) {
-                                    source = utils.extractSource(chunk.code, chunk.exports, preserveSource);
+                                    source = extractSource(chunk.code, chunk.exports, preserveSource);
                                     map = null;
                                     if (sourcemap) {
-                                        map = utils.fixMapSources(chunk, basePath);
+                                        map = fixMapSources(chunk, basePath);
                                     }
                                 } else {
                                     source = path.posix.join(loadPath, workerID);
                                     chunk.fileName = workerID;
                                     idMap.get(id).chunk = chunk;
                                 }
-                                resolve({code: utils.buildWorkerCode(source, map, inline, preserveSource, enableUnicode)});
+                                resolve({
+                                    code: buildWorkerCode(source, map, {
+                                        inline,
+                                        preserveSource,
+                                        enableUnicode,
+                                        targetPlatform,
+                                    }),
+                                });
                             } else {
                                 resolve(null);
                             }
