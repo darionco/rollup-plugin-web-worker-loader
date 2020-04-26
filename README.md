@@ -87,7 +87,7 @@ The `sourcemap` configuration option is ignored when `inline` is set to `false`,
 - [x] Support for dependencies using `import`
 - [x] Include source map
 - [x] Configuration options to inline or code-split workers
-- [ ] Provide capability checks and fallbacks
+- [ ] ~~Provide capability checks and fallbacks~~ DROPPED (all modern environments support workers) 
 - [ ] ~~Avoid code duplication~~ DROPPED (there are better solutions for this purpose)
 
 
