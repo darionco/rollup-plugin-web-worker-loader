@@ -42,6 +42,9 @@ dataWorker.postMessage('Hello World!');
 The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
+    targetPlatform?: string,        // the platform workers should be built for, either 'browser' or 'node'.
+                                    // Default: 'browser'
+
     pattern?: RegEx,                // a RegEx instance describing the pattern that matches the files to import as
                                     // web workers. If capturing groups are present, the plugin uses the contents of the
                                     // last capturing group as the path to the worker script. Default: /web-worker:(.+)/
