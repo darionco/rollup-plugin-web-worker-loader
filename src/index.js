@@ -27,7 +27,7 @@ module.exports = function workerLoaderPlugin(config = null) {
     let forceInlineCounter = 0;
 
     return {
-        name: 'web-worker-loader',
+        name: 'rollup-plugin-web-worker-loader',
 
         options(options) {
             if (!projectOptions) {
