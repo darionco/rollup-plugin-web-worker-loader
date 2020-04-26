@@ -6,13 +6,17 @@ var kRequire = kIsNodeJS &&
         typeof require === 'function' && require) || // eslint-disable-line
     null; // eslint-disable-line
 
-export function createInlineWorkerFactory(fn, sourcemap = null) {
+export function createInlineWorkerFactory(fn, sourcemapArg) {
+    var sourcemap = sourcemapArg === undefined ? null : sourcemapArg;
     var source = fn.toString();
     var start = source.indexOf('\n', 10) + 1;
     var end = source.indexOf('}', source.length - 1);
     var body = source.substring(start, end) + (sourcemap ? '\/\/# sourceMappingURL=' + sourcemap : '');
     var blankPrefixLength = body.search(/\S/);
-    var lines = body.split('\n').map(line => line.substring(blankPrefixLength) + '\n');
+    var lines = body.split('\n');
+    for (var i = 0, n = lines.length; i < n; ++i) {
+        lines[i] = lines[i].substring(blankPrefixLength) + '\n';
+    }
 
     if (kRequire) {
         /* node.js */
@@ -49,9 +53,9 @@ export function browserDecodeBase64(base64, enableUnicode) {
     var binaryString = atob(base64);
     if (enableUnicode) {
         var binaryView = new Uint8Array(binaryString.length);
-        Array.prototype.forEach.call(binaryView, (el, idx, arr) => {
-            arr[idx] = binaryString.charCodeAt(idx);
-        });
+        for (var i = 0, n = binaryString.length; i < n; ++i) {
+            binaryView[i] = binaryString.charCodeAt(i);
+        }
         return String.fromCharCode.apply(null, new Uint16Array(binaryView.buffer));
     }
     return binaryString;
@@ -61,7 +65,9 @@ export function nodeDecodeBase64(base64, enableUnicode) {
     return Buffer.from(base64, 'base64').toString(enableUnicode ? 'utf16' : 'utf8');
 }
 
-export function createBase64WorkerFactory(base64, sourcemap = null, enableUnicode = false) {
+export function createBase64WorkerFactory(base64, sourcemapArg, enableUnicodeArg) {
+    var sourcemap = sourcemapArg === undefined ? null : sourcemapArg;
+    var enableUnicode = enableUnicodeArg === undefined ? false : enableUnicodeArg;
     var source = kIsNodeJS ? nodeDecodeBase64(base64, enableUnicode) : browserDecodeBase64(base64, enableUnicode);
     var start = source.indexOf('\n', 10) + 1;
     var body = source.substring(start) + (sourcemap ? '\/\/# sourceMappingURL=' + sourcemap : '');
