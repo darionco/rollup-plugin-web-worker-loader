@@ -6,7 +6,7 @@ const extractSource = require('./utils/extractSource');
 const buildWorkerCode = require('./utils/buildWorkerCode');
 
 module.exports = function workerLoaderPlugin(config = null) {
-    const targetPlatform = config && config.hasOwnProperty('targetPlatform') ? config.targetPlatform : 'browser';
+    const targetPlatform = config && config.hasOwnProperty('targetPlatform') ? config.targetPlatform : 'auto';
     const sourcemap = config && config.hasOwnProperty('sourcemap') ? config.sourcemap : false;
     const loadPath = config && config.hasOwnProperty('loadPath') ? config.loadPath : '';
     const preserveSource = config && config.hasOwnProperty('preserveSource') ? config.preserveSource : false;

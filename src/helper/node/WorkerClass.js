@@ -4,6 +4,10 @@ var kRequire =
     typeof require === 'function' && require || // eslint-disable-line
     null; // eslint-disable-line
 
-var WorkerClass = kRequire('worker_threads').Worker; // eslint-disable-line
+var WorkerClass = null;
+
+if (kRequire) {
+    try { WorkerClass = kRequire('worker_threads').Worker; } catch(e) {} // eslint-disable-line
+}
 
 export {WorkerClass};
