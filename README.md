@@ -42,29 +42,29 @@ dataWorker.postMessage('Hello World!');
 The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
-    targetPlatform?: string,        // the platform workers should be built for, can be 'auto', 'browser' or 'node'.
+    targetPlatform?: string,        // The platform workers should be built for, can be 'auto', 'browser' or 'node'.
                                     // specifying either 'browser' or 'node' reduces the amount of loader code.
                                     // Default: 'auto'
 
-    pattern?: RegEx,                // a RegEx instance describing the pattern that matches the files to import as
+    pattern?: RegEx,                // A RegEx instance describing the pattern that matches the files to import as
                                     // web workers. If capturing groups are present, the plugin uses the contents of the
                                     // last capturing group as the path to the worker script. Default: /web-worker:(.+)/
 
-    sourcemap?: boolean,            // when inlined, should a source map be included in the final output. Default: false
+    sourcemap?: boolean,            // When inlined, should a source map be included in the final output. Default: false
 
-    inline?: boolean,               // should the worker code be inlined (Base64). Default: true
+    inline?: boolean,               // Should the worker code be inlined (Base64). Default: true
 
     forceInline?: boolean,          // *EXPERIMENTAL* when inlined, forces the code to be included every time it is imported
                                     // useful when using code splitting: Default: false
 
-    preserveSource?: boolean,       // when inlined and this option is enabled, the full source code is included in the
+    preserveSource?: boolean,       // When inlined and this option is enabled, the full source code is included in the
                                     // built file, otherwise it's embedded as a base64 string. Default: false
 
-    enableUnicodeSupport?: boolean, // when inlined in Base64 format, this option enables unicode support (UTF16). This
+    enableUnicodeSupport?: boolean, // When inlined in Base64 format, this option enables unicode support (UTF16). This
                                     // flag is disabled by default because supporting UTF16 doubles the size of the final
                                     // payload. Default: false
 
-    loadPath?: string,              // this option is useful when the worker scripts need to be loaded from another folder.
+    loadPath?: string,              // This option is useful when the worker scripts need to be loaded from another folder.
                                     // Default: ''
 
     skipPlugins?: Array             // Plugin names to skip for web worker build
