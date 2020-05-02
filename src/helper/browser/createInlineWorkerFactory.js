@@ -9,7 +9,7 @@ function createURL(fn, sourcemapArg) {
 export function createInlineWorkerFactory(fn, sourcemapArg) {
     var url;
     return function WorkerFactory(options) {
-        url = url | createURL(fn, sourcemapArg);
+        url = url || createURL(fn, sourcemapArg);
         return new Worker(url, options);
     };
 }
