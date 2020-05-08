@@ -60,9 +60,8 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
                 targetPlatform: config.targetPlatform,
             }),
         };
-    } else {
-        return null;
     }
+    return null;
 }
 
 function load(state, config, addWatchFile, id) {

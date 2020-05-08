@@ -4,7 +4,7 @@ function options(state, config, options) {
         if (options.plugins && options.plugins.length) {
             const plugins = [];
             options.plugins.forEach(plugin => {
-                if (config.skipPlugins.has(plugin.name)){
+                if (config.skipPlugins.has(plugin.name)) {
                     return;
                 }
                 plugins.push(plugin);
