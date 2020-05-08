@@ -1,4 +1,6 @@
-function options(state, config, options) {
+const path = require('path');
+
+function optionsImp(state, config, options) {
     if (!state.options) {
         state.options = Object.assign({}, options);
         if (options.plugins && options.plugins.length) {
@@ -60,4 +62,4 @@ function options(state, config, options) {
     return null;
 }
 
-module.exports = options;
+module.exports = optionsImp;

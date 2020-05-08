@@ -24,6 +24,7 @@ function findChunk(rollupOutput) {
             return chunk;
         }
     }
+    return null;
 }
 
 function updateWatchModules(modules, addWatchFile) {
