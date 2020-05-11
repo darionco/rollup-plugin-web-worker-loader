@@ -21,7 +21,7 @@ function resolveId(state, config, importee, importer) {
             }
 
             if (target) {
-                const prefixed = `\0rollup-plugin-worker-loader::module:${config.forceInline ? `:${state.forceInlineCounter++}:` : ''}${name}`;
+                const prefixed = `\0rollup-plugin-worker-loader::module:${config.forceInline ? `:${state.forceInlineCounter++}:` : ''}${target}`;
                 if (!state.idMap.has(prefixed)) {
                     const inputOptions = Object.assign({}, state.options, {
                         input: target,
@@ -35,7 +35,7 @@ function resolveId(state, config, importee, importer) {
                     });
                 }
 
-                if (state.idMap.has(prefixed)) {
+                if (!state.exclude.has(prefixed)) {
                     return prefixed;
                 }
                 return target;
