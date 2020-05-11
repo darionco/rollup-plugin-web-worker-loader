@@ -49,6 +49,10 @@ webWorkerLoader({
     pattern?: RegEx,                // A RegEx instance describing the pattern that matches the files to import as
                                     // web workers. If capturing groups are present, the plugin uses the contents of the
                                     // last capturing group as the path to the worker script. Default: /web-worker:(.+)/
+    
+    extensions?: string[],          // An array of strings to use as extensions when resolving worker files.
+                                    // Default: ['.js']
+
 
     sourcemap?: boolean,            // When inlined, should a source map be included in the final output. Default: false
 
@@ -63,6 +67,9 @@ webWorkerLoader({
     enableUnicodeSupport?: boolean, // When inlined in Base64 format, this option enables unicode support (UTF16). This
                                     // flag is disabled by default because supporting UTF16 doubles the size of the final
                                     // payload. Default: false
+
+    outputFolder?: string,          // When code splitting is used (`inline: false`), folder in which the worker scripts
+                                    // should be written to. Default: '' (same as build output folder)
 
     loadPath?: string,              // This option is useful when the worker scripts need to be loaded from another folder.
                                     // Default: ''
