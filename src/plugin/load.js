@@ -49,8 +49,9 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
                 map = fixMapSources(chunk, state.basePath);
             }
         } else {
-            source = path.posix.join(config.loadPath, workerID);
-            chunk.fileName = workerID;
+            const workerPath = path.posix.join(config.outputFolder, workerID);
+            source = path.posix.join(config.loadPath, workerPath);
+            chunk.fileName = workerPath;
             state.idMap.get(id).chunk = chunk;
         }
         return {

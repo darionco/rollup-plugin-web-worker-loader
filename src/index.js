@@ -15,6 +15,7 @@ const defaultConfig = {
     inline: true,
     forceInline: false,
     extensions: [ '.js' ],
+    outputFolder: '',
     skipPlugins: [
         'liveServer',
         'serve',
