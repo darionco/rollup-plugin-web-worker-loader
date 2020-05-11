@@ -1,5 +1,21 @@
 const path = require('path');
 
+function resolveModule(name, paths, extensions) {
+    const testNames = [name, ...extensions.map(extension => {
+        return extension.startsWith('.') ? `${name}${extension}` : `${name}.${extension}`;
+    })];
+
+    for (let i = 0, n = testNames.length; i < n; ++i) {
+        try {
+            return require.resolve(testNames[i], {paths});
+        } catch (e) {
+            // empty
+        }
+    }
+
+    return null;
+}
+
 function resolveId(state, config, importee, importer) {
     const match = importee.match(config.pattern);
     if (importee.startsWith('\0rollup-plugin-web-worker-loader::helper')) {
@@ -15,7 +31,7 @@ function resolveId(state, config, importee, importer) {
                 const folder = path.dirname(importer);
                 const paths = require.resolve.paths(importer);
                 paths.push(folder);
-                target = require.resolve(name, {paths});
+                target = resolveModule(name, paths, config.extensions);
             } else if (path.isAbsolute(name)) {
                 target = name;
             }

@@ -14,6 +14,7 @@ const defaultConfig = {
     pattern: /web-worker:(.+)/,
     inline: true,
     forceInline: false,
+    extensions: [ '.js' ],
     skipPlugins: [
         'liveServer',
         'serve',
