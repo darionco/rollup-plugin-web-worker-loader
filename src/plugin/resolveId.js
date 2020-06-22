@@ -1,9 +1,10 @@
 const path = require('path');
 
 function resolveModule(name, paths, extensions) {
-    const testNames = [name, ...extensions.map(extension => {
-        return extension.startsWith('.') ? `${name}${extension}` : `${name}.${extension}`;
-    })];
+    const testNames = [
+        name,
+        ...extensions.map(extension => (extension.startsWith('.') ? `${name}${extension}` : `${name}.${extension}`)),
+    ];
 
     for (let i = 0, n = testNames.length; i < n; ++i) {
         try {
