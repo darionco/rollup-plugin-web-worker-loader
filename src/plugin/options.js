@@ -11,7 +11,7 @@ function optionsImp(state, config, options) {
                 }
                 plugins.push(plugin);
             });
-            state.plugins = plugins;
+            state.options.plugins = plugins;
 
             const cwd = process.cwd();
             if (typeof options.input === 'string') {
