@@ -1,33 +1,10 @@
-function extractSource(code, exports, asFunction = true) {
-    let source;
-    if (exports.length) {
-        let start;
-        let comment;
-        let i;
-
-        source = code;
-        start = source.indexOf('export { ');
-        start = start === -1 ? source.indexOf('export default') : start;
-        while (start !== -1) {
-            comment = '';
-            for (i = start; i < source.length; ++i) {
-                if (source[i] === '\n') {
-                    break;
-                }
-                comment += '/';
-            }
-            source = source.substring(0, start) + comment + source.substring(i);
-            start = source.indexOf('export { ');
-            start = start === -1 ? source.indexOf('export default') : start;
-        }
-    } else {
-        source = code;
-    }
-
+function extractSource(code, asFunction = true) {
     if (asFunction) {
-        return `/* rollup-plugin-web-worker-loader */function () {\n${source}}\n`;
+        return `/* rollup-plugin-web-worker-loader */function () {\n${
+            code.replace(/(['"])use strict(['"])/g, '$1__worker_loader_strict__$2')
+        }}\n`;
     }
-    return `/* rollup-plugin-web-worker-loader */\n${source}\n`;
+    return `/* rollup-plugin-web-worker-loader */\n${code}\n`;
 }
 
 module.exports = extractSource;

@@ -43,7 +43,7 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
         let map = null;
         let source;
         if (config.inline) {
-            source = extractSource(chunk.code, chunk.exports, config.preserveSource);
+            source = extractSource(chunk.code, config.preserveSource);
             map = null;
             if (config.sourcemap) {
                 map = fixMapSources(chunk, state.basePath);
@@ -78,7 +78,7 @@ function load(state, config, addWatchFile, id) {
             rollup.rollup(inputOptions).then(bundle => {
                 state.exclude.delete(id);
                 state.exclude.delete(target);
-                bundle.generate({format: 'es', name: id, sourcemap: true}).then(result => {
+                bundle.generate({format: 'iife', name: 'worker_code', sourcemap: true}).then(result => {
                     resolve(handleBundleGenerated(state, config, addWatchFile, id, workerID, result));
                 }).catch(reject);
             }).catch(reason => {
