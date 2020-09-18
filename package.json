@@ -17,7 +17,7 @@
         "worker"
     ],
     "devDependencies": {
-        "eslint": "^6.8.0"
+        "eslint": "^7.9.0"
     },
     "peerDependencies": {
         "rollup": "^1.9.2 || ^2.0.0"
