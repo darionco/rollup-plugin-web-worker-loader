@@ -15,7 +15,7 @@ function fixMapSources(chunk, basePath) {
     const newSourcesComponents = [];
     let maxUpFolder = 0;
     for (let i = 0; i < map.sources.length; ++i) {
-        const full = findFullPath(map.sources[i], map.sourcesContent[i].length, chunk.modules);
+        const full = map.sourcesContent[i] && findFullPath(map.sources[i], map.sourcesContent[i].length, chunk.modules);
         if (full) {
             const relative = path.relative(basePath, full);
             const base = path.dirname(relative);
