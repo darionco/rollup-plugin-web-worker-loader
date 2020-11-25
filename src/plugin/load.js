@@ -78,7 +78,13 @@ function load(state, config, addWatchFile, id) {
             rollup.rollup(inputOptions).then(bundle => {
                 state.exclude.delete(id);
                 state.exclude.delete(target);
-                bundle.generate({format: 'iife', name: 'worker_code', sourcemap: true}).then(result => {
+                const bundleOptions = {
+                    format: 'iife',
+                    name: 'worker_code',
+                    sourcemap: true,
+                    inlineDynamicImports: true,
+                };
+                bundle.generate(bundleOptions).then(result => {
                     resolve(handleBundleGenerated(state, config, addWatchFile, id, workerID, result));
                 }).catch(reject);
             }).catch(reason => {
