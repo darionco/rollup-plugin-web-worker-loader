@@ -14,6 +14,7 @@ const defaultConfig = {
     pattern: /web-worker:(.+)/,
     inline: true,
     forceInline: false,
+    external: undefined,
     extensions: [ '.js' ],
     outputFolder: '',
     skipPlugins: [
