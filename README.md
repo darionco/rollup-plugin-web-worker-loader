@@ -61,6 +61,9 @@ webWorkerLoader({
     forceInline?: boolean,          // *EXPERIMENTAL* when inlined, forces the code to be included every time it is imported
                                     // useful when using code splitting: Default: false
 
+    external?: string[],            // *EXPERIMENTAL* override rollup resolution of external module IDs
+                                    // useful to inline external dependencies in a worker blob. Default: undefined
+
     preserveSource?: boolean,       // When inlined and this option is enabled, the full source code is included in the
                                     // built file, otherwise it's embedded as a base64 string. Default: false
 

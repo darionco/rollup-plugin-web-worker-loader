@@ -75,6 +75,9 @@ function load(state, config, addWatchFile, id) {
             const {inputOptions, workerID, target} = state.idMap.get(id);
             state.exclude.add(id);
             state.exclude.add(target);
+            if (config.external) {
+                inputOptions.external = config.external;
+            }
             rollup.rollup(inputOptions).then(bundle => {
                 state.exclude.delete(id);
                 state.exclude.delete(target);
