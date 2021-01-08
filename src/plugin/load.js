@@ -42,7 +42,7 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
 
         let map = null;
         let source;
-        if (config.inline) {
+        if (config.inline || config.targetPlatform === 'base64') {
             source = extractSource(chunk.code, config.preserveSource);
             map = null;
             if (config.sourcemap) {
