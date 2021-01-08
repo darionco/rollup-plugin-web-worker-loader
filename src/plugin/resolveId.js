@@ -44,8 +44,23 @@ function resolveId(state, config, importee, importer) {
                         input: target,
                     });
 
+                    let workerName;
+                    if (config.preserveFileNames) {
+                        const extension = path.extname(target);
+                        workerName = path.basename(target, extension);
+                        if (!state.outFiles.has(workerName)) {
+                            state.outFiles.set(workerName, 0);
+                        } else {
+                            const duplicateCount = state.outFiles.get(workerName);
+                            state.outFiles.set(workerName, duplicateCount + 1);
+                            workerName += duplicateCount + 1;
+                        }
+                    } else {
+                        workerName = `web-worker-${state.idMap.size}`;
+                    }
+
                     state.idMap.set(prefixed, {
-                        workerID: `web-worker-${state.idMap.size}.js`,
+                        workerID: `${workerName}.js`,
                         chunk: null,
                         inputOptions,
                         target,

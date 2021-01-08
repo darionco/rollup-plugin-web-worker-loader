@@ -10,6 +10,7 @@ const defaultConfig = {
     sourcemap: 'false',
     loadPath: '',
     preserveSource: false,
+    preserveFileNames: false,
     enableUnicode: false,
     pattern: /web-worker:(.+)/,
     inline: true,
@@ -31,6 +32,7 @@ module.exports = function workerLoaderPlugin(userConfig = null) {
     const state = {
         idMap: new Map(),
         exclude: new Set(),
+        outFiles: new Map(),
         options: null,
         basePath: null,
         forceInlineCounter: 0,
