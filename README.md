@@ -42,8 +42,11 @@ dataWorker.postMessage('Hello World!');
 The plugin responds to the following configuration options:
 ```javascript
 webWorkerLoader({
-    targetPlatform?: string,        // The platform workers should be built for, can be 'auto', 'browser' or 'node'.
-                                    // specifying either 'browser' or 'node' reduces the amount of loader code.
+    targetPlatform?: string,        // The platform workers should be built for, can be 'auto', 'browser', 'node' or 'base64'.
+                                    // specifying a target platform other than 'auto' reduces the amount of loader code.
+                                    // The `base64` options forces inline and the import results on a base64 string that
+                                    // encodes the worker's source code. NOTE: The string does not include a mime type.
+                                    // 'auto' detectes the target platform and selects between 'browser` and 'node'.
                                     // Default: 'auto'
 
     pattern?: RegEx,                // A RegEx instance describing the pattern that matches the files to import as
@@ -66,6 +69,10 @@ webWorkerLoader({
 
     preserveSource?: boolean,       // When inlined and this option is enabled, the full source code is included in the
                                     // built file, otherwise it's embedded as a base64 string. Default: false
+    
+    preserveFileNames?: boolean,    // When code splitting is used (`inline === false`) the input worker file names are
+                                    // preserved, if duplicates are found `-n` is appended to the file names.
+                                    // Default: false
 
     enableUnicodeSupport?: boolean, // When inlined in Base64 format, this option enables unicode support (UTF16). This
                                     // flag is disabled by default because supporting UTF16 doubles the size of the final
@@ -91,6 +98,8 @@ An example project that uses this plugin with TypeScript can be found [here](htt
 The `sourcemap` configuration option is ignored when `inline` is set to `false`, in that case the project's sourcemap configuration is inherited.
 
 `loadPath` is meant to be used in situations where code-splitting is used (`inline = false`) and the entry script is hosted in a different folder than the worker code.
+
+Setting `targetPlatform` to `'base64'` will ignore the `inline` option and will always inline the resulting code.
 
 
 ### Roadmap
