@@ -7,7 +7,7 @@ const generateBundle = require('./plugin/generateBundle');
 
 const defaultConfig = {
     targetPlatform: 'auto',
-    sourcemap: 'false',
+    sourcemap: false,
     loadPath: '',
     preserveSource: false,
     preserveFileNames: false,
