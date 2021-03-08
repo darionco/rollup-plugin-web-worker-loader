@@ -43,7 +43,7 @@ export default base64;
     return `
 /* eslint-disable */
 import {${factoryFuncName}} from '\0rollup-plugin-web-worker-loader::helper::${options.targetPlatform}::${factoryFuncName}';
-var WorkerFactory = ${factoryFuncName}(${argsString});
+var WorkerFactory = /*#__PURE__*/${factoryFuncName}(${argsString});
 export default WorkerFactory;
 /* eslint-enable */\n`;
 }
