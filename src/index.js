@@ -7,6 +7,7 @@ const generateBundle = require('./plugin/generateBundle');
 
 const defaultConfig = {
     targetPlatform: 'auto',
+    browserWorker: 'Worker',
     sourcemap: false,
     loadPath: '',
     preserveSource: false,

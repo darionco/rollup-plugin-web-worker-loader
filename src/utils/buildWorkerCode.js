@@ -3,16 +3,25 @@ const kDefaultsOptions = {
     preserveSource: false,
     enableUnicode: false,
     targetPlatform: 'browser',
+    browserWorker: 'Worker'
 };
 
+function getWorkerName(options) {
+    if (options.targetPlatform === 'browser') {
+        return options.browserWorker
+    }
+    return 'Worker'
+}
+
 function getFactoryFuncName(options) {
+    const workerName = getWorkerName(options)
     if (options.inline) {
         if (options.preserveSource) {
-            return 'createInlineWorkerFactory';
+            return `createInline${workerName}Factory`;
         }
-        return 'createBase64WorkerFactory';
+        return `createBase64${workerName}Factory`;
     }
-    return 'createURLWorkerFactory';
+    return `createURL${workerName}Factory`;
 }
 
 function getArgsString(source, sourcemap, options) {

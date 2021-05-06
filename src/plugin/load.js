@@ -60,6 +60,7 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
                 preserveSource: config.preserveSource,
                 enableUnicode: config.enableUnicode,
                 targetPlatform: config.targetPlatform,
+                browserWorker: config.browserWorker
             }),
         };
     }

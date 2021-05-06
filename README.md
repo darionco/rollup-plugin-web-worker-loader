@@ -35,7 +35,12 @@ By default you can add the prefix `web-worker:` to your imports:
 import DataWorker from 'web-worker:./DataWorker';
 
 const dataWorker = new DataWorker();
+
+// Worker
 dataWorker.postMessage('Hello World!');
+
+// SharedWorker
+dataWorker.port.postMessage('Hello World!');
 ```
 
 ### Configuration
@@ -48,6 +53,10 @@ webWorkerLoader({
                                     // encodes the worker's source code. NOTE: The string does not include a mime type.
                                     // 'auto' detectes the target platform and selects between 'browser` and 'node'.
                                     // Default: 'auto'
+
+    browserWorker?: string,         // The worker constructor name used in platform 'browser', can be 'Worker' or 'SharedWorker'.
+                                    // It only works when `targetPlatform` is set to 'browser' explicitly.
+                                    // Default: 'Worker'
 
     pattern?: RegEx,                // A RegEx instance describing the pattern that matches the files to import as
                                     // web workers. If capturing groups are present, the plugin uses the contents of the
