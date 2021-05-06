@@ -46,6 +46,13 @@ function getMatchAndType(importee, config) {
             match,
         };
     }
+    match = importee.match(config.sharedWorkerPattern);
+    if (match) {
+        return {
+            type: 'shared-worker',
+            match,
+        };
+    }
     return {match: null};
 }
 

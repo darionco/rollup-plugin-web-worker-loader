@@ -10,6 +10,7 @@ const typeMap = {
     'audio-worklet': 'AudioWorklet',
     'paint-worklet': 'PaintWorklet',
     'service-worker': 'ServiceWorker',
+    'shared-worker': 'SharedWorker',
 };
 
 function getFactoryFuncName(options) {

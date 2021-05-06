@@ -10,7 +10,7 @@ function decodeBase64(base64, enableUnicode) {
     return binaryString;
 }
 
-function createURL(base64, sourcemapArg, enableUnicodeArg) {
+export function createURL(base64, sourcemapArg, enableUnicodeArg) {
     var sourcemap = sourcemapArg === undefined ? null : sourcemapArg;
     var enableUnicode = enableUnicodeArg === undefined ? false : enableUnicodeArg;
     var source = decodeBase64(base64, enableUnicode);

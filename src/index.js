@@ -7,6 +7,7 @@ const generateBundle = require('./plugin/generateBundle');
 
 const defaultConfig = {
     targetPlatform: 'auto',
+    browserWorker: 'Worker',
     sourcemap: false,
     loadPath: '',
     preserveSource: false,
@@ -16,6 +17,7 @@ const defaultConfig = {
     audioWorkletPattern: /audio-worklet:(.+)/,
     paintWorkletPattern: /paint-worklet:(.+)/,
     serviceWorkerPattern: /service-worker:(.+)/,
+    sharedWorkerPattern: /shared-worker:(.+)/,
     inline: true,
     forceInline: false,
     external: undefined,
