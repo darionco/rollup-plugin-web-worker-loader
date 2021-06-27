@@ -1,4 +1,4 @@
-import {createURLWorkerFactory as browserCreateURLAudioWorkletFactory} from '\0rollup-plugin-web-worker-loader::helper::browser::createURLAudioWorkletFactory';
+import {createURLAudioWorkletFactory as browserCreateURLAudioWorkletFactory} from '\0rollup-plugin-web-worker-loader::helper::browser::createURLAudioWorkletFactory';
 import {isNodeJS} from '\0rollup-plugin-web-worker-loader::helper::auto::isNodeJS';
 
 export function createURLAudioWorkletFactory(url) {
