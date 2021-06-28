@@ -12,7 +12,11 @@ const defaultConfig = {
     preserveSource: false,
     preserveFileNames: false,
     enableUnicode: false,
-    pattern: /web-worker:(.+)/,
+    webWorkerPattern: /web-worker:(.+)/,
+    audioWorkletPattern: /audio-worklet:(.+)/,
+    // paintWorkletPattern: /paint-worklet:(.+)/,
+    // animationWorkletPattern: /animation-worklet:(.+)/,
+    // serviceWorkerPattern: /service-worker:(.+)/,
     inline: true,
     forceInline: false,
     external: undefined,
@@ -26,6 +30,9 @@ const defaultConfig = {
 };
 
 module.exports = function workerLoaderPlugin(userConfig = null) {
+    if (userConfig) {
+        userConfig.webWorkerPattern = userConfig?.webWorkerPattern || userConfig?.pattern || null;
+    }
     const config = Object.assign({}, defaultConfig, userConfig);
     config.skipPlugins = new Set(config.skipPlugins);
 

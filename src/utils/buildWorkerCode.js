@@ -5,14 +5,23 @@ const kDefaultsOptions = {
     targetPlatform: 'browser',
 };
 
+const typeMap = {
+    'web-worker': 'Worker',
+    'audio-worklet': 'AudioWorklet',
+    // 'paint-worklet': 'PaintWorklet',
+    // 'animation-worklet': 'AnimationWorklet',
+    // 'service-worker': 'ServiceWorker'
+};
+
 function getFactoryFuncName(options) {
+    const typeFileNameSegment = typeMap[options.type];
     if (options.inline) {
         if (options.preserveSource) {
-            return 'createInlineWorkerFactory';
+            return `createInline${typeFileNameSegment}Factory`;
         }
-        return 'createBase64WorkerFactory';
+        return `createBase64${typeFileNameSegment}Factory`;
     }
-    return 'createURLWorkerFactory';
+    return `createURL${typeFileNameSegment}Factory`;
 }
 
 function getArgsString(source, sourcemap, options) {
