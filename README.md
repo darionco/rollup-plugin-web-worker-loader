@@ -1,6 +1,13 @@
 # rollup-plugin-web-worker-loader
 
-Rollup plugin to handle Web Workers.
+Rollup plugin to handle Web Workers, Service Workers, Shared Workers,
+Audio Worklets, and Paint Worklets. Support for Animation Worklets and
+Layout Worklets is in consideration for when implementations are available
+in browsers.
+
+Web Workers are available in Node JS as well as in browsers. All the other
+worklets and workers are available in browsers only, and will throw a runtime
+error if used in Node JS.
 
 Can inline the worker code or emit a script file using code-splitting.
 Handles Worker dependencies and can emit source maps.
@@ -27,6 +34,8 @@ export default {
 };
 ```
 
+#### Web Worker Example
+
 Bundle the worker code using the RegEx pattern specified in the plugin's configuration.
 By default you can add the prefix `web-worker:` to your imports:
 
@@ -37,6 +46,81 @@ import DataWorker from 'web-worker:./DataWorker';
 const dataWorker = new DataWorker();
 dataWorker.postMessage('Hello World!');
 ```
+
+#### Shared Worker Example
+
+```javascript
+import SharedWorker from 'shared-worker:./SharedWorker';
+
+const sharedWorker = new SharedWorker();
+sharedWorker.port.postMessage('Hello World!');
+```
+
+#### Service Worker Example
+
+```javascript
+import ServiceWorker from 'service-worker:./ServiceWorker';
+
+ServiceWorker.then(function(registration) {
+    console.log('Registration successful, scope is: ', registration.scope);
+})
+.catch(function(error) {
+    console.log('Service worker registration failed, error: ', error);
+}
+```
+
+#### Audio Worklet Example
+
+Audio Worklets require an audio context at instantiation. When you use
+rollup-plugin-web-worker-loader in a browser environment, your import will
+return a constructor to which you can pass an audio context.
+##### Worklet Processor
+
+```javascript
+class MyAudioWorkletProcessor extends AudioWorkletProcessor {
+}
+
+registerProcessor("my-audio-worklet", MyAudioWorkletProcessor);
+```
+
+##### Worklet Consumer
+
+```javascript
+import registerMyAudioWorklet from 'audio-worklet:./MyAudioWorkletFactory';
+
+const audioContext = new AudioContext();
+registerMyAudioWorklet(audioContext);
+
+class MyAudioWorklet extends AudioWorkletNode {
+    constructor(audioContext) {
+        super(audioContext, "my-audio-worklet"));
+    }
+}
+```
+
+#### Paint Worklet Example
+
+##### Worklet Processor
+
+```javascript
+class MyPaintWorklet {
+    ...
+}
+
+registerPaint('my-paint-worklet', MyPaintWorklet);
+```
+
+##### Worklet Consumer
+
+```javascript
+import registerMyPaintWorklet from 'paint-worklet:./MyPaintWorkletFactory';
+registerMyPaintWorklet();
+```
+
+```css
+html {
+    background: paint(my-paint-worklet);
+}
 
 ### Configuration
 The plugin responds to the following configuration options:
@@ -49,9 +133,26 @@ webWorkerLoader({
                                     // 'auto' detectes the target platform and selects between 'browser` and 'node'.
                                     // Default: 'auto'
 
-    pattern?: RegEx,                // A RegEx instance describing the pattern that matches the files to import as
+    web-worker?: RegEx,             // A RegEx instance describing the pattern that matches the files to import as
                                     // web workers. If capturing groups are present, the plugin uses the contents of the
                                     // last capturing group as the path to the worker script. Default: /web-worker:(.+)/
+
+    shared-worker?: RegEx,          // A RegEx instance describing the pattern that matches the files to import as
+                                    // shared workers. If capturing groups are present, the plugin uses the contents of the
+                                    // last capturing group as the path to the worker script. Default: /shared-worker:(.+)/
+
+    service-worker?: RegEx,         // A RegEx instance describing the pattern that matches the files to import as
+                                    // service workers. If capturing groups are present, the plugin uses the contents of the
+                                    // last capturing group as the path to the worker script. Default: /service-worker:(.+)/
+
+    audio-worklet?: RegEx,          // A RegEx instance describing the pattern that matches the files to import as
+                                    // audio worklets. If capturing groups are present, the plugin uses the contents of the
+                                    // last capturing group as the path to the worker script. Default: /audio-worklet:(.+)/
+
+    paint-worklet?: RegEx,          // A RegEx instance describing the pattern that matches the files to import as
+                                    // paint worklets. If capturing groups are present, the plugin uses the contents of the
+                                    // last capturing group as the path to the worker script. Default: /paint-worklet:(.+)/
+
     
     extensions?: string[],          // An array of strings to use as extensions when resolving worker files.
                                     // Default: ['.js']
