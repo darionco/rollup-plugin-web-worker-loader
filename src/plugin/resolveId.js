@@ -32,13 +32,13 @@ function getMatchAndType(importee, config) {
             match,
         };
     }
-    // match = importee.match(config.paintWorkletPattern);
-    // if (match) {
-    //     return {
-    //         type: "paint-worklet",
-    //         match
-    //     }
-    // }
+    match = importee.match(config.paintWorkletPattern);
+    if (match) {
+        return {
+            type: 'paint-worklet',
+            match,
+        };
+    }
     // match = importee.match(config.animationWorkletPattern);
     // if (match) {
     //     return {

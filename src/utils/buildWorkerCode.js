@@ -8,7 +8,7 @@ const kDefaultsOptions = {
 const typeMap = {
     'web-worker': 'Worker',
     'audio-worklet': 'AudioWorklet',
-    // 'paint-worklet': 'PaintWorklet',
+    'paint-worklet': 'PaintWorklet',
     // 'animation-worklet': 'AnimationWorklet',
     // 'service-worker': 'ServiceWorker'
 };
