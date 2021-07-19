@@ -15,7 +15,7 @@ const defaultConfig = {
     webWorkerPattern: /web-worker:(.+)/,
     audioWorkletPattern: /audio-worklet:(.+)/,
     paintWorkletPattern: /paint-worklet:(.+)/,
-    // serviceWorkerPattern: /service-worker:(.+)/,
+    serviceWorkerPattern: /service-worker:(.+)/,
     inline: true,
     forceInline: false,
     external: undefined,

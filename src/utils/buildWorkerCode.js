@@ -9,7 +9,7 @@ const typeMap = {
     'web-worker': 'Worker',
     'audio-worklet': 'AudioWorklet',
     'paint-worklet': 'PaintWorklet',
-    // 'service-worker': 'ServiceWorker'
+    'service-worker': 'ServiceWorker',
 };
 
 function getFactoryFuncName(options) {

@@ -39,13 +39,13 @@ function getMatchAndType(importee, config) {
             match,
         };
     }
-    // match = importee.match(config.serviceWorkerPattern);
-    // if (match) {
-    //     return {
-    //         type: "service-worker",
-    //         match
-    //     }
-    // }
+    match = importee.match(config.serviceWorkerPattern);
+    if (match) {
+        return {
+            type: 'service-worker',
+            match,
+        };
+    }
     return {match: null};
 }
 
