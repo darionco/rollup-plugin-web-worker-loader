@@ -39,13 +39,6 @@ function getMatchAndType(importee, config) {
             match,
         };
     }
-    // match = importee.match(config.animationWorkletPattern);
-    // if (match) {
-    //     return {
-    //         type: "animation-worklet",
-    //         match
-    //     }
-    // }
     // match = importee.match(config.serviceWorkerPattern);
     // if (match) {
     //     return {
