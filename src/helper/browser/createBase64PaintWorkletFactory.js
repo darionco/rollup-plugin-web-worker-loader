@@ -22,9 +22,9 @@ function createURL(base64, sourcemapArg, enableUnicodeArg) {
 
 export function createBase64PaintWorkletFactory(base64, sourcemapArg, enableUnicodeArg) {
     var url;
-    return async function PaintWorkletFactory(options) {
+    return function PaintWorkletFactory(options) {
         url = url || createURL(base64, sourcemapArg, enableUnicodeArg);
-        return await CSS.paintWorklet.addModule(url, options);
+        return CSS.paintWorklet.addModule(url, options);
     };
 }
 

@@ -8,9 +8,9 @@ function createURL(fn, sourcemapArg) {
 
 export function createInlinePaintWorkletFactory(fn, sourcemapArg) {
     var url;
-    return async function PaintWorkletFactory(options) {
+    return function PaintWorkletFactory(options) {
         url = url || createURL(fn, sourcemapArg);
-        return await CSS.paintWorklet.addModule(url, options);
+        return CSS.paintWorklet.addModule(url, options);
     };
 }
 
