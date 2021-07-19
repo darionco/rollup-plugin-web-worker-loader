@@ -30,9 +30,6 @@ const defaultConfig = {
 };
 
 module.exports = function workerLoaderPlugin(userConfig = null) {
-    if (userConfig) {
-        userConfig.webWorkerPattern = userConfig?.webWorkerPattern || userConfig?.pattern || null;
-    }
     const config = Object.assign({}, defaultConfig, userConfig);
     config.skipPlugins = new Set(config.skipPlugins);
 
