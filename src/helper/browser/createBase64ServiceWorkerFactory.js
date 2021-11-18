@@ -10,7 +10,7 @@ function decodeBase64(base64, enableUnicode) {
     return binaryString;
 }
 
-export function createURL(base64, sourcemapArg, enableUnicodeArg) {
+function createURL(base64, sourcemapArg, enableUnicodeArg) {
     var sourcemap = sourcemapArg === undefined ? null : sourcemapArg;
     var enableUnicode = enableUnicodeArg === undefined ? false : enableUnicodeArg;
     var source = decodeBase64(base64, enableUnicode);
@@ -20,10 +20,10 @@ export function createURL(base64, sourcemapArg, enableUnicodeArg) {
     return URL.createObjectURL(blob);
 }
 
-export function createBase64WorkerFactory(base64, sourcemapArg, enableUnicodeArg) {
+export function createBase64ServiceWorkerFactory(base64, sourcemapArg, enableUnicodeArg) {
     var url;
-    return function WorkerFactory(options) {
+    return function ServiceWorkerFactory(options) {
         url = url || createURL(base64, sourcemapArg, enableUnicodeArg);
-        return new Worker(url, options);
+        return new SharedWorker(url, options);
     };
 }
