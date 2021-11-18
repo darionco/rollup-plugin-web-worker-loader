@@ -193,6 +193,8 @@ webWorkerLoader({
 ### TypeScript
 An example project that uses this plugin with TypeScript can be found [here](https://github.com/darionco/rollup-typescript-webworkers)
 
+**WARNING:** `@rollup/plugin-typescript` is NOT compatible with this plugin, use `rollup-plugin-typescript2` instead (see [#38](https://github.com/darionco/rollup-plugin-web-worker-loader/issues/38)).
+
 ### Notes
 **WARNING:** To use code-splitting for the worker scripts, Rollup v1.9.2 or higher is required. See https://github.com/rollup/rollup/issues/2801 for more details.
 
