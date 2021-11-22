@@ -121,6 +121,7 @@ registerMyPaintWorklet();
 html {
     background: paint(my-paint-worklet);
 }
+```
 
 ### Configuration
 The plugin responds to the following configuration options:
