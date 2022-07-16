@@ -5,7 +5,8 @@ function decodeBase64(base64, enableUnicode) {
         for (var i = 0, n = binaryString.length; i < n; ++i) {
             binaryView[i] = binaryString.charCodeAt(i);
         }
-        return String.fromCharCode.apply(null, new Uint16Array(binaryView.buffer));
+        const decoder = new TextDecoder("utf-16le")
+        return decoder.decode(new Uint16Array(binaryView.buffer));
     }
     return binaryString;
 }
