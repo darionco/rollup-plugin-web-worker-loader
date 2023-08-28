@@ -1,25 +1,32 @@
 {
-    "name": "rollup-plugin-web-worker-loader",
-    "version": "1.6.1",
-    "description": "Rollup plugin to handle Web Workers",
-    "main": "src/index.js",
-    "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
-    "author": "Dario Segura",
-    "license": "MIT",
-    "scripts": {
-        "lint": "eslint src/**/*.js"
-    },
-    "keywords": [
-        "rollup",
-        "rollup-plugin",
-        "webworker",
-        "web-worker",
-        "worker"
-    ],
-    "devDependencies": {
-        "eslint": "^7.9.0"
-    },
-    "peerDependencies": {
-        "rollup": "^1.9.2 || ^2.0.0 || ^3.0.0"
-    }
+  "name": "@colingm/rollup-plugin-web-worker-loader",
+  "version": "1.6.1",
+  "description": "Rollup plugin to handle Web Workers",
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/darionco/rollup-plugin-web-worker-loader.git"
+  },
+  "author": "Dario Segura",
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint src/**/*.js"
+  },
+  "keywords": [
+    "rollup",
+    "rollup-plugin",
+    "webworker",
+    "web-worker",
+    "worker"
+  ],
+  "devDependencies": {
+    "eslint": "^7.9.0"
+  },
+  "peerDependencies": {
+    "rollup": "^1.9.2 || ^2.0.0 || ^3.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/darionco/rollup-plugin-web-worker-loader/issues"
+  },
+  "homepage": "https://github.com/darionco/rollup-plugin-web-worker-loader#readme"
 }
