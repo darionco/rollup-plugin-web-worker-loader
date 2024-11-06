@@ -1,6 +1,6 @@
 {
     "name": "rollup-plugin-web-worker-loader",
-    "version": "1.6.0",
+    "version": "1.6.1",
     "description": "Rollup plugin to handle Web Workers",
     "main": "src/index.js",
     "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
@@ -20,6 +20,6 @@
         "eslint": "*"
     },
     "peerDependencies": {
-        "rollup": "*"
+       "rollup": "^1.9.2 || ^2.0.0 || ^3.0.0 || ^4.0.0"
     }
 }
