@@ -1,10 +1,10 @@
 {
     "name": "rollup-plugin-web-worker-loader",
-    "version": "1.6.0",
+    "version": "1.7.0",
     "description": "Rollup plugin to handle Web Workers",
     "main": "src/index.js",
-    "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
-    "author": "Dario Segura",
+    "repository": "https://github.com/keshav-bohr/rollup-plugin-web-worker-loader",
+    "author": "Keshav Bohra",
     "license": "MIT",
     "scripts": {
         "lint": "eslint src/**/*.js"
