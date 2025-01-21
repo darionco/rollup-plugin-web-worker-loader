@@ -1,4 +1,4 @@
-import {createURL} from '\0rollup-plugin-web-worker-loader::helper::browser::createBase64WorkerFactory';
+import {createURL} from '\0rollup-web-worker-loader::helper::browser::createBase64WorkerFactory';
 
 export function createBase64SharedWorkerFactory(base64, sourcemapArg, enableUnicodeArg) {
     var url;

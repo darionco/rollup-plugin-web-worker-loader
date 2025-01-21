@@ -5,7 +5,7 @@ const fixMapSources = require('../utils/fixMapSources');
 const extractSource = require('../utils/extractSource');
 const buildWorkerCode = require('../utils/buildWorkerCode');
 
-const helperPattern = /^\0(?:[0-9]+::)?rollup-plugin-web-worker-loader::helper(?:::)?/;
+const helperPattern = /^\0(?:[0-9]+::)?rollup-web-worker-loader::helper(?:::)?/;
 
 function loadHelperFile(id, match, resolve, reject) {
     const helperParts = id.substr(match[0].length).split('::');

@@ -1,4 +1,4 @@
-import {WorkerClass} from '\0rollup-plugin-web-worker-loader::helper::node::WorkerClass';
+import {WorkerClass} from '\0rollup-web-worker-loader::helper::node::WorkerClass';
 
 function decodeBase64(base64, enableUnicode) {
     return Buffer.from(base64, 'base64').toString(enableUnicode ? 'utf16' : 'utf8');

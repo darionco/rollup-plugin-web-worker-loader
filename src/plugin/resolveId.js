@@ -58,7 +58,7 @@ function getMatchAndType(importee, config) {
 
 function resolveId(state, config, importee, importer) {
     const { match, type } = getMatchAndType(importee, config);
-    if (importee.startsWith('\0rollup-plugin-web-worker-loader::helper')) {
+    if (importee.startsWith('\0rollup-web-worker-loader::helper')) {
         if (config.forceInline) {
             return `\0${state.forceInlineCounter++}::${importee.substr(1)}`;
         }

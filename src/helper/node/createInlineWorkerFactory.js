@@ -1,5 +1,5 @@
-import {funcToSource} from '\0rollup-plugin-web-worker-loader::helper::funcToSource';
-import {WorkerClass} from '\0rollup-plugin-web-worker-loader::helper::node::WorkerClass';
+import {funcToSource} from '\0rollup-web-worker-loader::helper::funcToSource';
+import {WorkerClass} from '\0rollup-web-worker-loader::helper::node::WorkerClass';
 
 export function createInlineWorkerFactory(fn, sourcemapArg) {
     var lines = funcToSource(fn, sourcemapArg);

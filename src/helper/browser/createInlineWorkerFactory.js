@@ -1,4 +1,4 @@
-import {funcToSource} from '\0rollup-plugin-web-worker-loader::helper::funcToSource';
+import {funcToSource} from '\0rollup-web-worker-loader::helper::funcToSource';
 
 export function createURL(fn, sourcemapArg) {
     var lines = funcToSource(fn, sourcemapArg);

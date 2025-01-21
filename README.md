@@ -1,4 +1,4 @@
-# rollup-plugin-web-worker-loader
+# rollup-web-worker-loader
 
 Rollup plugin to handle Web Workers, Service Workers, Shared Workers,
 Audio Worklets, and Paint Worklets. Support for Animation Worklets and
@@ -17,13 +17,13 @@ Supports bundling workers for Node.js environments
 ### Getting started
 
 ```
-yarn add rollup-plugin-web-worker-loader --dev
+yarn add rollup-web-worker-loader --dev
 ```
 
 Add the plugin to your rollup configuration:
 
 ```javascript
-import webWorkerLoader from 'rollup-plugin-web-worker-loader';
+import webWorkerLoader from 'rollup-web-worker-loader';
 
 export default {
     entry: 'src/index.js',
@@ -72,7 +72,7 @@ ServiceWorker.then(function(registration) {
 #### Audio Worklet Example
 
 Audio Worklets require an audio context at instantiation. When you use
-rollup-plugin-web-worker-loader in a browser environment, your import will
+rollup-web-worker-loader in a browser environment, your import will
 return a constructor to which you can pass an audio context.
 ##### Worklet Processor
 
@@ -194,7 +194,7 @@ webWorkerLoader({
 ### TypeScript
 An example project that uses this plugin with TypeScript can be found [here](https://github.com/darionco/rollup-typescript-webworkers)
 
-**WARNING:** `@rollup/plugin-typescript` is NOT compatible with this plugin, use `rollup-plugin-typescript2` instead (see [#38](https://github.com/darionco/rollup-plugin-web-worker-loader/issues/38)).
+**WARNING:** `@rollup/plugin-typescript` is NOT compatible with this plugin, use `rollup-plugin-typescript2` instead (see [#38](https://github.com/darionco/rollup-web-worker-loader/issues/38)).
 
 ### Notes
 **WARNING:** To use code-splitting for the worker scripts, Rollup v1.9.2 or higher is required. See https://github.com/rollup/rollup/issues/2801 for more details.

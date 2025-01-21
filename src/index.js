@@ -45,7 +45,7 @@ module.exports = function workerLoaderPlugin(userConfig = null) {
     };
 
     return {
-        name: 'rollup-plugin-web-worker-loader',
+        name: 'rollup-web-worker-loader',
 
         options(optionsArg) {
             return options(state, config, optionsArg);

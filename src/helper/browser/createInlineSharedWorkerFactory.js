@@ -1,4 +1,4 @@
-import {createURL} from '\0rollup-plugin-web-worker-loader::helper::browser::createInlineWorkerFactory';
+import {createURL} from '\0rollup-web-worker-loader::helper::browser::createInlineWorkerFactory';
 
 export function createInlineSharedWorkerFactory(fn, sourcemapArg) {
     var url;

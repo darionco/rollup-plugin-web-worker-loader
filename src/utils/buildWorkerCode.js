@@ -51,7 +51,7 @@ export default base64;
 
     return `
 /* eslint-disable */
-import {${factoryFuncName}} from '\0rollup-plugin-web-worker-loader::helper::${options.targetPlatform}::${factoryFuncName}';
+import {${factoryFuncName}} from '\0rollup-web-worker-loader::helper::${options.targetPlatform}::${factoryFuncName}';
 var WorkerFactory = /*#__PURE__*/${factoryFuncName}(${argsString});
 export default WorkerFactory;
 /* eslint-enable */\n`;
@@ -60,7 +60,7 @@ export default WorkerFactory;
 function buildWorkerCode(source, sourcemap = null, optionsArg = kDefaultsOptions) {
     const options = Object.assign({}, kDefaultsOptions, optionsArg);
     if (options.targetPlatform === 'node' && options.type !== 'web-worker') {
-        throw new Error(`rollup-plugin-web-worker-loader only supports web-workers in node. ${options.type} is unavailable.`);
+        throw new Error(`rollup-web-worker-loader only supports web-workers in node. ${options.type} is unavailable.`);
     }
     const factoryFuncName = getFactoryFuncName(options);
     const argsString = getArgsString(source, sourcemap, options);
