@@ -17,47 +17,8 @@ function resolveModule(name, paths, extensions) {
     return null;
 }
 
-function getMatchAndType(importee, config) {
-    let match = importee.match(config.webWorkerPattern);
-    if (match) {
-        return {
-            type: 'web-worker',
-            match,
-        };
-    }
-    match = importee.match(config.audioWorkletPattern);
-    if (match) {
-        return {
-            type: 'audio-worklet',
-            match,
-        };
-    }
-    match = importee.match(config.paintWorkletPattern);
-    if (match) {
-        return {
-            type: 'paint-worklet',
-            match,
-        };
-    }
-    match = importee.match(config.serviceWorkerPattern);
-    if (match) {
-        return {
-            type: 'service-worker',
-            match,
-        };
-    }
-    match = importee.match(config.sharedWorkerPattern);
-    if (match) {
-        return {
-            type: 'shared-worker',
-            match,
-        };
-    }
-    return {match: null};
-}
-
 function resolveId(state, config, importee, importer) {
-    const { match, type } = getMatchAndType(importee, config);
+    const match = importee.match(config.pattern);
     if (importee.startsWith('\0rollup-web-worker-loader::helper')) {
         if (config.forceInline) {
             return `\0${state.forceInlineCounter++}::${importee.substr(1)}`;
@@ -95,7 +56,7 @@ function resolveId(state, config, importee, importer) {
                             workerName += duplicateCount + 1;
                         }
                     } else {
-                        workerName = `${type}-${state.idMap.size}`;
+                        workerName = `web-worker-${state.idMap.size}`;
                     }
 
                     state.idMap.set(prefixed, {
@@ -103,7 +64,6 @@ function resolveId(state, config, importee, importer) {
                         chunk: null,
                         inputOptions,
                         target,
-                        type,
                     });
                 }
 

@@ -11,6 +11,7 @@ function optionsImp(state, config, options) {
                 }
                 plugins.push(plugin);
             });
+            plugins.push(...config.plugins);
             state.options.plugins = plugins;
 
             const cwd = process.cwd();

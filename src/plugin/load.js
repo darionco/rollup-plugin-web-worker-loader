@@ -60,7 +60,6 @@ function handleBundleGenerated(state, config, addWatchFile, id, workerID, result
                 preserveSource: config.preserveSource,
                 enableUnicode: config.enableUnicode,
                 targetPlatform: config.targetPlatform,
-                type: state.idMap.get(id).type,
             }),
         };
     }
