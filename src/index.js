@@ -41,7 +41,7 @@ module.exports = function workerLoaderPlugin(userConfig = null) {
         options: null,
         basePath: null,
         forceInlineCounter: 0,
-        configuredFileName: null,
+        configuredFileNames: new Map(),
     };
 
     return {
