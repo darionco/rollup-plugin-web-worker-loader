@@ -18,6 +18,7 @@ const defaultConfig = {
     external: undefined,
     extensions: [ '.js' ],
     outputFolder: '',
+    plugins: [],
     skipPlugins: [
         'liveServer',
         'serve',
