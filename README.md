@@ -186,7 +186,13 @@ webWorkerLoader({
     loadPath?: string,              // This option is useful when the worker scripts need to be loaded from another folder.
                                     // Default: ''
 
-    skipPlugins?: Array             // Plugin names to skip for web worker build
+    plugins?: Array,                // An array of extra plugins to use while compiling the worker code. Used to apply 
+                                    // transformations to the worker code and not the main code (i.e. minify)
+                                    // NOTE: these plugins be added to the rollop process on top of the plugins in the
+                                    // default configuration.
+                                    // Default: []
+    
+    skipPlugins?: Array,            // Plugin names to skip for web worker build
                                     // Default: [ 'liveServer', 'serve', 'livereload' ]
 })
 ```
