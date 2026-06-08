@@ -4,6 +4,10 @@
     "description": "Rollup plugin to handle Web Workers",
     "main": "src/index.js",
     "repository": "https://github.com/darionco/rollup-plugin-web-worker-loader",
+    "homepage": "https://github.com/darionco/rollup-plugin-web-worker-loader#readme",
+    "bugs": {
+        "url": "https://github.com/darionco/rollup-plugin-web-worker-loader/issues"
+    },
     "author": "Dario Segura",
     "license": "MIT",
     "scripts": {
